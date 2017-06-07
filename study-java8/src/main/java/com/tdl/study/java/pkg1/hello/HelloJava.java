@@ -1,4 +1,4 @@
-package com.tdl.study.java8.pkg1.hello;
+package com.tdl.study.java.pkg1.hello;
 
 public class HelloJava {
     public static void main(String args[]) {
