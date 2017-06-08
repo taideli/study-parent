@@ -10,8 +10,8 @@
         <version>1.0</version>
     </parent>
 
-    <artifactId>study-java8</artifactId>
-    <groupId>com.tdl.study.java8</groupId>
+    <artifactId>study-java</artifactId>
+    <groupId>com.tdl.study.java</groupId>
     <packaging>jar</packaging>
 
 </project>
