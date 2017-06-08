@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>study-java8</module>
+        <module>study-java</module>
         <module>study-scala</module>
     </modules>
 
