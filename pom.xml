@@ -12,7 +12,12 @@
     <modules>
         <module>study-java</module>
         <module>study-scala</module>
+        <module>study-hdfs</module>
     </modules>
+
+    <properties>
+        <hadoop.version>2.7.3</hadoop.version>
+    </properties>
 
     <build>
         <plugins>
