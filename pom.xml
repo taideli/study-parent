@@ -10,12 +10,19 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>study-java</module>
-        <module>study-scala</module>
+        <module>study-hbase</module>
         <module>study-hdfs</module>
+        <module>study-java</module>
+        <module>study-kafka</module>
+        <module>study-scala</module>
+        <module>study-spark</module>
+        <module>study-yarn</module>
+        <module>study-zk</module>
     </modules>
 
     <properties>
+        <java.version>1.8</java.version>
+        <scala.version>2.11.8</scala.version>
         <hadoop.version>2.7.3</hadoop.version>
     </properties>
 

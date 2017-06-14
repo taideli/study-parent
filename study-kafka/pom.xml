@@ -10,15 +10,11 @@
         <version>1.0</version>
     </parent>
 
-    <artifactId>study-scala</artifactId>
-    <groupId>com.tdl.study.scala</groupId>
+    <artifactId>study-kafka</artifactId>
+    <groupId>com.tdl.study.kafka</groupId>
     <packaging>jar</packaging>
 
     <dependencies>
-        <dependency>
-            <groupId>org.scala-lang</groupId>
-            <artifactId>scala-library</artifactId>
-            <version>${scala.version}</version>
-        </dependency>
+
     </dependencies>
 </project>
