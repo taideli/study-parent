@@ -13,7 +13,9 @@
         <module>study-hbase</module>
         <module>study-hdfs</module>
         <module>study-java</module>
+        <module>study-jetty</module>
         <module>study-kafka</module>
+        <module>study-netty</module>
         <module>study-scala</module>
         <module>study-spark</module>
         <module>study-yarn</module>
@@ -26,6 +28,7 @@
         <scala.binary.version>2.11</scala.binary.version>
         <hadoop.version>2.7.3</hadoop.version>
         <spark.version>2.0.0</spark.version>
+        <netty.version>4.1.9.Final</netty.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
