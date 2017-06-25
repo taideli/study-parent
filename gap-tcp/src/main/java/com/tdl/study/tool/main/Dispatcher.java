@@ -27,7 +27,9 @@ public class Dispatcher extends WaiterImpl {
     }
 
     public static void main(String args[]) throws IOException, InterruptedException {
-        Dispatcher inst = new Dispatcher(args);
+        String[] arg = new String[] {"169.254.141.14", "6000", "E:/pool/requests", "E:/pool/responses"};
+        Dispatcher inst = new Dispatcher(arg);
+//        Dispatcher inst = new Dispatcher(args);
         inst.start();
         inst.join();
     }

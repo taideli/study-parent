@@ -27,7 +27,9 @@ public class Invoker extends WaiterImpl {
     }
 
     public static void main(String args[]) throws InterruptedException, IOException {
-        Invoker inst = new Invoker(args);
+        String[] arg = new String[] {"169.254.141.14", "6000", "E:/pool/responses", "E:/pool/requests" };
+        Invoker inst = new Invoker(arg);
+//        Invoker inst = new Invoker(args);
         inst.start();
         inst.join();
     }

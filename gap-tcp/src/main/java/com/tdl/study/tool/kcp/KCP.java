@@ -18,27 +18,27 @@ public abstract class KCP {
     //=====================================================================
     // KCP BASIC
     //=====================================================================
-    public final int IKCP_RTO_NDL = 30;   // no delay min rto
-    public final int IKCP_RTO_MIN = 100;  // normal min rto
-    public final int IKCP_RTO_DEF = 200;
-    public final int IKCP_RTO_MAX = 60000;
-    public final int IKCP_CMD_PUSH = 81;  // cmd: push data
-    public final int IKCP_CMD_ACK = 82;   // cmd: ack
-    public final int IKCP_CMD_WASK = 83;  // cmd: window probe (ask)
-    public final int IKCP_CMD_WINS = 84;  // cmd: window size (tell)
-    public final int IKCP_ASK_SEND = 1;   // need to send IKCP_CMD_WASK
-    public final int IKCP_ASK_TELL = 2;   // need to send IKCP_CMD_WINS
-    public final int IKCP_WND_SND = 32;
-    public final int IKCP_WND_RCV = 32;
-    public final int IKCP_MTU_DEF = 1400;
-    public final int IKCP_ACK_FAST = 3;
-    public final int IKCP_INTERVAL = 100;
-    public final int IKCP_OVERHEAD = 24;
-    public final int IKCP_DEADLINK = 10;
-    public final int IKCP_THRESH_INIT = 2;
-    public final int IKCP_THRESH_MIN = 2;
-    public final int IKCP_PROBE_INIT = 7000;    // 7 secs to probe window size
-    public final int IKCP_PROBE_LIMIT = 120000; // up to 120 secs to probe window
+    public static final int IKCP_RTO_NDL = 30;   // no delay min rto
+    public static final int IKCP_RTO_MIN = 100;  // normal min rto
+    public static final int IKCP_RTO_DEF = 200;
+    public static final int IKCP_RTO_MAX = 60000;
+    public static final int IKCP_CMD_PUSH = 81;  // cmd: push data
+    public static final int IKCP_CMD_ACK = 82;   // cmd: ack
+    public static final int IKCP_CMD_WASK = 83;  // cmd: window probe (ask)
+    public static final int IKCP_CMD_WINS = 84;  // cmd: window size (tell)
+    public static final int IKCP_ASK_SEND = 1;   // need to send IKCP_CMD_WASK
+    public static final int IKCP_ASK_TELL = 2;   // need to send IKCP_CMD_WINS
+    public static final int IKCP_WND_SND = 32;
+    public static final int IKCP_WND_RCV = 32;
+    public static final int IKCP_MTU_DEF = 1400;
+    public static final int IKCP_ACK_FAST = 3;
+    public static final int IKCP_INTERVAL = 100;
+    public static final int IKCP_OVERHEAD = 24;
+    public static final int IKCP_DEADLINK = 10;
+    public static final int IKCP_THRESH_INIT = 2;
+    public static final int IKCP_THRESH_MIN = 2;
+    public static final int IKCP_PROBE_INIT = 7000;    // 7 secs to probe window size
+    public static final int IKCP_PROBE_LIMIT = 120000; // up to 120 secs to probe window
 
     protected abstract void output(byte[] buffer, int size); // 需具体实现
 
@@ -638,6 +638,7 @@ public abstract class KCP {
         int offset = 0;
         for (int i = 0; i < count; i++) {
             if (offset + IKCP_OVERHEAD > mtu) {
+                System.err.println("将acklist中的ack发送出去");
                 output(buffer, offset);
                 offset = 0;
             }
@@ -678,6 +679,7 @@ public abstract class KCP {
         if ((probe & IKCP_ASK_SEND) != 0) {
             seg.cmd = IKCP_CMD_WASK;
             if (offset + IKCP_OVERHEAD > mtu) {
+                System.err.println("请求对端接收窗口");
                 output(buffer, offset);
                 offset = 0;
             }
@@ -689,6 +691,7 @@ public abstract class KCP {
         if ((probe & IKCP_ASK_TELL) != 0) {
             seg.cmd = IKCP_CMD_WINS;
             if (offset + IKCP_OVERHEAD > mtu) {
+                System.err.println("告诉对端自己的接收窗口");
                 output(buffer, offset);
                 offset = 0;
             }
@@ -771,6 +774,7 @@ public abstract class KCP {
 
                 int need = IKCP_OVERHEAD + segment.data.length;
                 if (offset + need >= mtu) {
+                    System.err.println("发送数据？");
                     output(buffer, offset);
                     offset = 0;
                 }
@@ -789,6 +793,7 @@ public abstract class KCP {
 
         // flash remain segments
         if (offset > 0) {
+            System.err.println("flash remain segments");
             output(buffer, offset);
         }
 
@@ -979,5 +984,12 @@ public abstract class KCP {
     // get how many packet is waiting to be sent
     public int WaitSnd() {
         return nsnd_buf.size() + nsnd_que.size();
+    }
+
+    protected void open() {
+        Segment seg = new Segment(0);
+        seg.conv = conv;
+        seg.cmd = IKCP_CMD_OPEN;
+        nsnd_buf.add(seg);
     }
 }
