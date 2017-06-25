@@ -3,7 +3,6 @@
  */
 package com.tdl.study.zk.pkg1.zk;
 
-import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooKeeper;
