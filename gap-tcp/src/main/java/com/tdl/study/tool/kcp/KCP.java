@@ -26,13 +26,16 @@ public abstract class KCP {
     public static final int IKCP_CMD_ACK = 82;   // cmd: ack
     public static final int IKCP_CMD_WASK = 83;  // cmd: window probe (ask)
     public static final int IKCP_CMD_WINS = 84;  // cmd: window size (tell)
+    public static final int IKCP_CMD_OPEN = 85;  // cmd: 自己加的
+    public static final int IKCP_CMD_CLOSE = 86;  // cmd: 自己加的
     public static final int IKCP_ASK_SEND = 1;   // need to send IKCP_CMD_WASK
     public static final int IKCP_ASK_TELL = 2;   // need to send IKCP_CMD_WINS
     public static final int IKCP_WND_SND = 32;
     public static final int IKCP_WND_RCV = 32;
     public static final int IKCP_MTU_DEF = 1400;
     public static final int IKCP_ACK_FAST = 3;
-    public static final int IKCP_INTERVAL = 100;
+    public static final int IKCP_INTERVAL = 100 * 10; // TODO 自己加的
+//    public static final int IKCP_INTERVAL = 100;
     public static final int IKCP_OVERHEAD = 24;
     public static final int IKCP_DEADLINK = 10;
     public static final int IKCP_THRESH_INIT = 2;
@@ -793,7 +796,7 @@ public abstract class KCP {
 
         // flash remain segments
         if (offset > 0) {
-            System.err.println("flash remain segments");
+            System.err.println("flash remain segments, offset:" + offset);
             output(buffer, offset);
         }
 
@@ -830,7 +833,6 @@ public abstract class KCP {
     // 'current' - current timestamp in millisec. 
     //---------------------------------------------------------------------
     public void Update(long current_) {
-
         current = current_;
 
         // 首次调用Update

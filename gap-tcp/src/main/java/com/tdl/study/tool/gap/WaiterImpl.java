@@ -20,14 +20,14 @@ public abstract class WaiterImpl extends Thread implements Waiter {
 
     protected final String host;
     protected final int port;
-    protected final String touchEx;
+    protected final String touchExt;
     protected final Path dumpDest;
     protected final Watcher watcher;
 
     public WaiterImpl(String watchExt, String touchExt, String... args) throws IOException {
         super();
         setName(getClass().getSimpleName() + "Thread");
-        this.touchEx = touchExt;
+        this.touchExt = touchExt;
 
         host = args[0];
         port = Integer.parseInt(args[1]);
@@ -66,7 +66,7 @@ public abstract class WaiterImpl extends Thread implements Waiter {
         } finally {
             Files.move(working, worked, StandardCopyOption.ATOMIC_MOVE);
             long s = Files.size(worked);
-            System.err.println("Data saved: [" + filename + "], size: [" + s + "].");
+//            System.err.println("Data saved: [" + filename + "], size: [" + s + "].");
         }
     }
 }
