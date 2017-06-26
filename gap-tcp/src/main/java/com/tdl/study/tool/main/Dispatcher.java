@@ -42,6 +42,7 @@ public class Dispatcher extends WaiterImpl {
             System.err.println("dispatcher receive high level buf, size:" + bytes.length);
         });
 //        kcp.connect();
+        System.err.println("git test");
         kcp.start();
         kcp.Send("hello".getBytes());
 
