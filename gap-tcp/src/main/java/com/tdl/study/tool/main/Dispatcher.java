@@ -44,7 +44,6 @@ public class Dispatcher extends WaiterImpl {
 //        kcp.connect();
         System.err.println("git test");
         System.err.println("git test");
-        System.err.println("git test");
         kcp.start();
         kcp.Send("hello".getBytes());
 
