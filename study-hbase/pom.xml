@@ -14,4 +14,17 @@
     <groupId>com.tdl.study.hbase</groupId>
     <packaging>jar</packaging>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-common</artifactId>
+            <version>${hadoop.version}</version>
+        </dependency>
+
+        <!--<dependency>-->
+            <!--<groupId>org.apache.hbase</groupId>-->
+            <!--<artifactId>hbase-common</artifactId>-->
+            <!--<version>${hbase.version}</version>-->
+        <!--</dependency>-->
+    </dependencies>
 </project>
