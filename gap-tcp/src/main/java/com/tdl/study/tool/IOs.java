@@ -3,14 +3,12 @@
  */
 package com.tdl.study.tool;
 
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class IOs {
+
     public static Path mkdirs(Path path) {
         if (Files.exists(path) && Files.isDirectory(path)) return path;
         try {
@@ -44,6 +42,21 @@ public class IOs {
         }
 //        logger.trace(() -> "readBytes: data[" + l + "]");
         return bytes;
+    }
+
+    public static byte[] readAll(final InputStream in) {
+        if (null == in) throw new IllegalArgumentException("null byte array is not allowed.");
+        try (ByteArrayOutputStream os = new ByteArrayOutputStream();) {
+            byte[] buffer = new byte[1024];
+            int n;
+            while (-1 != (n = in.read(buffer)))
+                os.write(buffer, 0, n);
+            byte[] b = os.toByteArray();
+//            logger.trace(() -> "Read all: " + b.length);
+            return b;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static <S extends OutputStream> S writeInt(S out, int i) throws IOException {

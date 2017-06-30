@@ -1,12 +1,12 @@
 /**
  * Created by Taideli on 2017/6/25.
  */
-package com.tdl.study.tool.main;
+package com.tdl.study.tool.main.tcp;
 
 import com.tdl.study.tool.IOs;
 import com.tdl.study.tool.gap.WaiterImpl;
 import com.tdl.study.tool.kcp.KcpOnFile;
-import com.tdl.study.tool.tcp.Client;
+import com.tdl.study.tool.protocol.tcp.Client;
 import com.tdl.study.tool.util.Tuple2;
 
 import java.io.IOException;

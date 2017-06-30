@@ -38,7 +38,7 @@ public abstract class WaiterImpl extends Thread implements Waiter {
         watcher.start();
     }
 
-    public abstract void seen(UUID key, InputStream in);
+    public abstract void seen(UUID key, InputStream in) throws IOException;
 
     @Override
     public void watch(Path from) {
