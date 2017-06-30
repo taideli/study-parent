@@ -11,21 +11,20 @@ import java.util.concurrent.TimeUnit;
 public class WaitNotify {
     private static boolean flag = true;
     private static final Object lock = new Object();
+    private static SimpleDateFormat f = new SimpleDateFormat("HH:mm:ss");
 
     public static void main(String[] args) throws InterruptedException {
         Thread waitThread = new Thread(() -> {
             synchronized (lock) {
                 while (flag) {
                     try {
-                        System.out.println(Thread.currentThread() + " flag is true. wait @ " +
-                                new SimpleDateFormat("HH:mm:ss").format(new Date()));
+                        System.out.println(Thread.currentThread() + " flag is true. wait @ " + f.format(new Date()));
                         lock.wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
-                System.out.println(Thread.currentThread() + " flag is false. running @ " +
-                        new SimpleDateFormat("HH:mm:ss").format(new Date()));
+                System.out.println(Thread.currentThread() + " flag is false. running @ " + f.format(new Date()));
             }
         }, "WaitThread");
         waitThread.start();
@@ -34,16 +33,14 @@ public class WaitNotify {
 
         Thread notifyThread = new Thread(() -> {
             synchronized (lock) {
-                System.out.println(Thread.currentThread() + " hold lock. notify @ " +
-                        new SimpleDateFormat("HH:mm:ss").format(new Date()));
+                System.out.println(Thread.currentThread() + " hold lock. notify @ " + f.format(new Date()));
                 lock.notifyAll();
                 flag = false;
                 SleepUtils.second(5);
             }
 
             synchronized (lock) {
-                System.out.println(Thread.currentThread() + " hold lock again. sleep @ " +
-                        new SimpleDateFormat("HH:mm:ss").format(new Date()));
+                System.out.println(Thread.currentThread() + " hold lock again. sleep @ " + f.format(new Date()));
                 SleepUtils.second(5);
             }
         }, "NotifyThread");
@@ -51,7 +48,7 @@ public class WaitNotify {
     }
 }
 
-/**
+/*
  * 经典范式
  * 等待方
  * synchronized(对象) {
