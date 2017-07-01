@@ -64,7 +64,8 @@ public class Dispatcher extends WaiterImpl {
 
                             AtomicBoolean finished = new AtomicBoolean(false);
                             UUID key = UUID.randomUUID();
-                            touch(key.toString() + touchExt, out -> write(out, remotePort, rbuf, finished));
+                            touch(dumpDest, key.toString() + touchExt, out -> write(out, remotePort, rbuf, finished));
+                            // notes by Taideli@2017-07-01_9:54 -> touch线程与当前线程不是同一线程,所以要有finished.
                             while (!finished.get()) {
                                 Threads.sleep(10);
                             }
