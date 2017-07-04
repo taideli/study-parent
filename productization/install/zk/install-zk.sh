@@ -14,6 +14,6 @@ export PATH=\$PATH:\$ZK_HOME/bin
 
 unset zk_org_short_name
 unset zk_short_name
-source /etc/profile
+source /etc/profile  # fix me, this will not effect
 
 . ./config-zk.sh
