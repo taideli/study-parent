@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set hadoop_org_short_name=`tar -tf ${hadoop} | head -n 1 | sed 's/.$//'`
+set hadoop_org_short_name=`tar -tf ${hadoop} | head -n 1 | sed 's/\/$//'`
 tar zxf ${hadoop} -C ${BG_INSTALL_HOME}
 set hadoop_short_name=hadoop
 mv ${BG_INSTALL_HOME}/${hadoop_org_short_name} ${BG_INSTALL_HOME}/${hadoop_short_name}

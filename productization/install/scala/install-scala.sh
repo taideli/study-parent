@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set scala_short_name=`tar -tf ${scala} | head -n 1 | sed 's/.$//'`
+set scala_short_name=`tar -tf ${scala} | head -n 1 | sed 's/\/$//'`
 tar zxf ${scala} -C ${BG_INSTALL_HOME}
 
 echo "\

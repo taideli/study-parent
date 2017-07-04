@@ -1,14 +1,14 @@
 #!/bin/bash
 
-set zk_org_short_name=`tar -tf ${zk} | head -n 1 | sed 's/.$//'`
+set zk_org_short_name=`tar -tf ${zk} | head -n 1 | sed 's/\/$//'`
 tar zxf ${zk} -C ${BG_INSTALL_HOME}
-set zk_short_name=hadoop
+set zk_short_name=zookeeper
 mv ${BG_INSTALL_HOME}/${zk_org_short_name} ${BG_INSTALL_HOME}/${zk_short_name}
 
 echo "\
 # zookeeper settings
 export ZK_HOME=${BG_INSTALL_HOME}/${hadoop_short_name}
-export PATH=\$PATH:\$ZK_HOME/bin:\$ZK_HOME/sbin
+export PATH=\$PATH:\$ZK_HOME/bin
 # settings for spark on yarn
 " >> ${custom_profile}
 
