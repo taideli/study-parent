@@ -1,0 +1,16 @@
+# NewYork taxi trips of 2013 for chapter 8
+#http://www.andresmh.com/nyctaxitrips/
+
+#交通数据共享网
+#http://www.transdata.cn/web/transdata/home.html
+
+# 云上贵州
+http://www.gzdata.gov.cn/index.html
+user:taideli
+pwd: !@#QAZ...
+
+# 深圳气象数据网
+https://data.szmb.gov.cn/szmbdata/
+
+# spark高级数据分析 3.1 数据集 audioscrobbler 2005
+http://www-etud.iro.umontreal.ca/~bergstrj/audioscrobbler_data.html
