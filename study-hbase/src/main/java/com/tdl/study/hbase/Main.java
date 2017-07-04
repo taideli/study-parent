@@ -1,17 +1,16 @@
 package com.tdl.study.hbase;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hbase.Cell;
+import org.apache.hadoop.hbase.CellUtil;
 import org.apache.hadoop.hbase.io.hfile.CacheConfig;
 import org.apache.hadoop.hbase.io.hfile.HFile;
-import org.apache.hadoop.hbase.io.hfile.HFileReaderV2;
 import org.apache.hadoop.hbase.io.hfile.HFileScanner;
+import org.apache.hadoop.hbase.util.Bytes;
 
 import java.io.IOException;
-import java.util.stream.Stream;
 
 public class Main {
 
@@ -26,8 +25,10 @@ public class Main {
         HFileScanner scanner = reader.getScanner(false, false);
         reader.length();
         Cell cell = scanner.getKeyValue();
-        System.out.println(cell.getRow() + "-> " + cell.getValue());
 
+        System.out.println("row: " + Bytes.toString(CellUtil.cloneRow(cell)));
+        System.out.println("f&q: " + Bytes.toString(CellUtil.cloneFamily(cell)) + ":" + Bytes.toString(CellUtil.cloneQualifier(cell)));
+        System.out.println("val: " + Bytes.toString(CellUtil.cloneValue(cell)));
 //        Stream.of(fs.listStatus(new Path(path))).map(FileStatus::getPath);
 //        Stream.of(fs.listStatus(new Path(path))).flatMap(FileStatus::getPath);
 
