@@ -1,0 +1,18 @@
+1. 建表
+create 'NewYorkTaxiTrips', 'f', SPLITS => ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+
+2. 插入数据
+put 'NewYorkTaxiTrips', 'rowkey1', 'f', 'hello NewYork'
+
+3. 遍历数据
+scan 'NewYorkTaxiTrips'
+
+4. 删除一条记录
+delete 'NewYorkTaxiTrips', 'rowkey1', 'f', 1499246737419
+
+5. 删除表
+disable 'NewYorkTaxiTrips'
+drop 'NewYorkTaxiTrips'
+
+6. 手动刷入硬盘
+flush 'NewYorkTaxiTrips'

@@ -19,19 +19,27 @@ public class Main {
         Configuration conf = new Configuration();
         FileSystem fs = FileSystem.newInstance(conf);
 
-        String path = "/b5810e656c372075a58e5f1dfb1310b5/f/d7bd2a511d6a422d8a20cd3e4643d261";
+        String path = args[0];
 
         HFile.Reader reader = HFile.createReader(fs, new Path(path), new CacheConfig(conf), conf);
+        System.out.println("length:" + reader.length());
+        System.out.println("entries: " + reader.getEntries());
+
+        reader.loadFileInfo();
+        reader.getCompressionAlgorithm().getName();
+
         HFileScanner scanner = reader.getScanner(false, false);
-        reader.length();
-        Cell cell = scanner.getKeyValue();
+        // seekTo 必须要先调用
+        if (!scanner.seekTo()) {
+            System.out.println("empty hfile");
+        }
+        do {
+            Cell cell = scanner.getKeyValue();
 
-        System.out.println("row: " + Bytes.toString(CellUtil.cloneRow(cell)));
-        System.out.println("f&q: " + Bytes.toString(CellUtil.cloneFamily(cell)) + ":" + Bytes.toString(CellUtil.cloneQualifier(cell)));
-        System.out.println("val: " + Bytes.toString(CellUtil.cloneValue(cell)));
-//        Stream.of(fs.listStatus(new Path(path))).map(FileStatus::getPath);
-//        Stream.of(fs.listStatus(new Path(path))).flatMap(FileStatus::getPath);
+            System.out.println("row: " + Bytes.toString(CellUtil.cloneRow(cell)));
+            System.out.println("f&q: " + Bytes.toString(CellUtil.cloneFamily(cell)) + ":" + Bytes.toString(CellUtil.cloneQualifier(cell)));
+            System.out.println("val: " + Bytes.toString(CellUtil.cloneValue(cell)));
 
-//        HFile.Reader reader = HFile.createReader()
+        } while (scanner.next());
     }
 }
