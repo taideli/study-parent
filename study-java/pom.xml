@@ -14,4 +14,12 @@
     <groupId>com.tdl.study.java</groupId>
     <packaging>jar</packaging>
 
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+        </dependency>
+    </dependencies>
+
 </project>
