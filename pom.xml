@@ -11,6 +11,7 @@
 
     <modules>
         <module>gap-tcp</module>
+        <module>study-core</module>
         <module>study-hbase</module>
         <module>study-hdfs</module>
         <module>study-java</module>
