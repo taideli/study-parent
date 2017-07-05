@@ -14,17 +14,33 @@
     <groupId>com.tdl.study.hbase</groupId>
     <packaging>jar</packaging>
 
+    <properties>
+        <study-core.version>1.0</study-core.version>
+    </properties>
+
     <dependencies>
         <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-common</artifactId>
-            <version>${hadoop.version}</version>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase-common</artifactId>
+            <version>${hbase.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase-common</artifactId>
+            <version>${hbase.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.hbase</groupId>
             <artifactId>hbase-server</artifactId>
             <version>${hbase.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.tdl.study.core</groupId>
+            <artifactId>study-core</artifactId>
+            <version>${study-core.version}</version>
         </dependency>
     </dependencies>
 </project>
