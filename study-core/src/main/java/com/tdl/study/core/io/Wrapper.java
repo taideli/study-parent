@@ -27,7 +27,6 @@ public interface Wrapper {
         @Override
         public long size() { return base.size();}
 
-
         @Override
         public long capacity() {return base.capacity();}
 
@@ -40,6 +39,6 @@ public interface Wrapper {
         @Override
         public String name() {return base.name();}
 
-        // FIXME: 2017/7/7 implenment openable interface's methods
+        // FIXME: 2017/7/7 implement openable interface's methods here
     }
 }
