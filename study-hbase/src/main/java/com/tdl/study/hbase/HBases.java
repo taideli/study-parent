@@ -1,6 +1,6 @@
 package com.tdl.study.hbase;
 
-import com.tdl.study.core.log.Logger;
+import com.tdl.study.core.log.Loggable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.Connection;
@@ -11,8 +11,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public final class HBases {
-    private static final Logger log = Logger.getLogger(HBases.class);
+public final class HBases implements Loggable {
     final static ExecutorService ex = Executors.newCachedThreadPool();
 
     public static Connection connect() throws IOException {
