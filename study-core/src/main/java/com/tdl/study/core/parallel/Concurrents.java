@@ -1,5 +1,7 @@
 package com.tdl.study.core.parallel;
 
+import com.tdl.study.core.log.Logger;
+
 import java.util.function.Supplier;
 
 public class Concurrents {
@@ -22,6 +24,14 @@ public class Concurrents {
     }
 
     public static boolean waitSleep(long millis) {
+        return waitSleep(millis, null, null);
+    }
+
+    public static boolean waitSleep(long millis, Logger logger, CharSequence cause) {
+        if (millis < 0) return true;
+        if (null != logger && logger.isTraceEnabled())
+            logger.trace("Thread [" + Thread.currentThread().getName() + "] sleep " +
+                millis + "millis, cause " + cause);
         try {
             Thread.sleep(millis);
             return true;
