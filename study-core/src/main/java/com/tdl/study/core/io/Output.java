@@ -1,6 +1,6 @@
 package com.tdl.study.core.io;
 
-import com.tdl.study.core.io.utils.Streams;
+import com.tdl.study.core.parallel.Streams;
 
 import java.util.Collection;
 import java.util.function.Consumer;

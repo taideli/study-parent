@@ -35,7 +35,7 @@ public interface Input<V> extends IO, Dequeue<V>, Supplier<V>, Iterator<V> {
 
     public static <T> Input<T> of(Supplier<? extends T> next, Supplier<Boolean> ending) {
 //        return of()
-        // TODO: 2017/7/7 fixme
+        // TODO: 2017/7/7 fixme cause unfinished ...
         return null;
     }
 
