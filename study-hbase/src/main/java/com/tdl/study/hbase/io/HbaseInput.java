@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 public class HbaseInput extends Namedly implements Input<Result> {
     @Override
     public long dequeue(Function<Stream<Result>, Long> using, long batchSize) {
+        // TODO: 2017/7/10
         return 0;
     }
 }
