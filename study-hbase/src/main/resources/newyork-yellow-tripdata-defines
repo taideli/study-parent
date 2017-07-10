@@ -1,0 +1,19 @@
+VendorID              出租车公司ID
+tpep_pickup_datetime  乘客上车时间 (年月日时分秒)
+tpep_dropoff_datetime 乘客下车时间 (年月日时分秒)
+passenger_count       乘客数量
+trip_distance         行驶距离(英里)
+pickup_longitude      上车纬度
+pickup_latitude       上车经度
+RateCodeID            比率？
+store_and_fwd_flag    是否过时记录(时间可能不对？)
+drop_longitude        下车纬度
+drop_latitude         下车经度
+payment_type          付款方式
+fare_amount           乘车费用
+extra                 附加费(空调燃油费)
+MTA_tax               MTA服务费(滴滴平台费)
+improvement_surcharge 评价费
+tip_amount            小费 (通过信用卡付的)
+tolls_amount          过路费
+total_amount          总费用
