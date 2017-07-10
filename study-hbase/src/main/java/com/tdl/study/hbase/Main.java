@@ -5,6 +5,7 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hbase.Cell;
 import org.apache.hadoop.hbase.CellUtil;
+import org.apache.hadoop.hbase.KeyValue.Type;
 import org.apache.hadoop.hbase.io.hfile.CacheConfig;
 import org.apache.hadoop.hbase.io.hfile.HFile;
 import org.apache.hadoop.hbase.io.hfile.HFileScanner;
@@ -36,6 +37,11 @@ public class Main {
         do {
             Cell cell = scanner.getKeyValue();
 
+            Type type = Type.codeToType(cell.getTypeByte());
+            if (cell.getTypeByte() >= Type.Delete.getCode() && cell.getTypeByte() <= Type.DeleteFamily.getCode()) {
+                System.out.println("rowkey: " + new String(CellUtil.cloneRow(cell)) + " has been deleted");
+                continue;
+            }
             System.out.println("row: " + Bytes.toString(CellUtil.cloneRow(cell)));
             System.out.println("f&q: " + Bytes.toString(CellUtil.cloneFamily(cell)) + ":" + Bytes.toString(CellUtil.cloneQualifier(cell)));
             System.out.println("val: " + Bytes.toString(CellUtil.cloneValue(cell)));

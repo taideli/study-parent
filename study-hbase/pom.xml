@@ -16,6 +16,7 @@
 
     <properties>
         <study-core.version>1.0</study-core.version>
+        <commons-csv.version>1.4</commons-csv.version>
     </properties>
 
     <dependencies>
@@ -42,5 +43,12 @@
             <artifactId>study-core</artifactId>
             <version>${study-core.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>${commons-csv.version}</version>
+        </dependency>
+
     </dependencies>
 </project>
