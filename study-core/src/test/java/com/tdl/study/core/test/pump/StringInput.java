@@ -8,12 +8,22 @@ public class StringInput extends InputImpl<String> {
     private long capacity;
     private volatile long ptr = 0;
 
+    public StringInput() {
+        this(Long.MAX_VALUE);
+    }
+
     public StringInput(long capacity) {
         this.capacity = capacity;
     }
 
     @Override
     protected String dequeue() {
-        return ptr++ >= capacity ? null : UUID.randomUUID().toString();
+        ptr++;
+        return UUID.randomUUID().toString();
+    }
+
+    @Override
+    public boolean empty() {
+        return ptr >= capacity;
     }
 }

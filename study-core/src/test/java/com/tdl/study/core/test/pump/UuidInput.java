@@ -9,6 +9,10 @@ public class UuidInput extends InputImpl<UUID> {
     private long capacity;
     private volatile long ptr;
 
+    public UuidInput() {
+        this(Long.MAX_VALUE);
+    }
+
     public UuidInput(long capacity) {
         this.capacity = capacity;
     }
