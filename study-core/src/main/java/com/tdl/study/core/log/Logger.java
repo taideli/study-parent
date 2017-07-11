@@ -105,4 +105,9 @@ public class Logger implements Serializable {
         return true;
     }
 
+    public boolean error(CharSequence msg, Throwable e) {
+        submit(() -> logger.error(msg.toString(), e));
+        return true;
+    }
+
 }
