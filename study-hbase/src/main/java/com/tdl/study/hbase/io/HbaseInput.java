@@ -1,7 +1,7 @@
 package com.tdl.study.hbase.io;
 
 import com.tdl.study.core.base.Namedly;
-import com.tdl.study.core.io.Input;
+import com.tdl.study.core.io.input.Input;
 import org.apache.hadoop.hbase.client.Result;
 
 import java.util.function.Function;

@@ -1,8 +1,8 @@
 package com.tdl.study.core.io.pump;
 
-import com.tdl.study.core.io.Input;
+import com.tdl.study.core.io.input.Input;
 import com.tdl.study.core.io.Openable;
-import com.tdl.study.core.io.Output;
+import com.tdl.study.core.io.output.Output;
 
 public interface Pump<V> extends Openable {
     Pump<V> batch(long batch);

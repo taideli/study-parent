@@ -1,6 +1,6 @@
 package com.tdl.study.hbase.io;
 
-import com.tdl.study.core.io.OutputImpl;
+import com.tdl.study.core.io.output.OutputImpl;
 
 /**
  * to console

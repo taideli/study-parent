@@ -1,7 +1,7 @@
 package com.tdl.study.core.io.pump;
 
-import com.tdl.study.core.io.Input;
-import com.tdl.study.core.io.Output;
+import com.tdl.study.core.io.input.Input;
+import com.tdl.study.core.io.output.Output;
 import com.tdl.study.core.parallel.Concurrents;
 
 public class BasicPump<V> extends PumpImpl<V, BasicPump<V>> {

@@ -1,4 +1,6 @@
-package com.tdl.study.core.io;
+package com.tdl.study.core.io.input;
+
+import com.tdl.study.core.io.IO;
 
 import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicLong;

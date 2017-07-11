@@ -1,4 +1,4 @@
-package com.tdl.study.core.io;
+package com.tdl.study.core.io.output;
 
 import java.util.stream.Stream;
 

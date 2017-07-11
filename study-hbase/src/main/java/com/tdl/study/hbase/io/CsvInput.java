@@ -1,6 +1,6 @@
 package com.tdl.study.hbase.io;
 
-import com.tdl.study.core.io.InputImpl;
+import com.tdl.study.core.io.input.InputImpl;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;

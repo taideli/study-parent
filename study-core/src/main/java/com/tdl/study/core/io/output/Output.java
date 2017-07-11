@@ -1,5 +1,7 @@
-package com.tdl.study.core.io;
+package com.tdl.study.core.io.output;
 
+import com.tdl.study.core.io.IO;
+import com.tdl.study.core.io.Wrapper;
 import com.tdl.study.core.parallel.Streams;
 
 import java.util.Collection;
