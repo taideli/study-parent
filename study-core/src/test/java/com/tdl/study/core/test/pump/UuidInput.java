@@ -7,7 +7,7 @@ import java.util.UUID;
 public class UuidInput extends InputImpl<UUID> {
 
     private long capacity;
-    private volatile long size;
+    private volatile long ptr;
 
     public UuidInput(long capacity) {
         this.capacity = capacity;
@@ -16,6 +16,12 @@ public class UuidInput extends InputImpl<UUID> {
     @Override
     protected UUID dequeue() {
         System.out.println("uuid dequeue");
-        return (size++ <= capacity) ? UUID.randomUUID() : null;
+        ptr++;
+        return UUID.randomUUID();
+    }
+
+    @Override
+    public boolean empty() {
+        return ptr >= capacity;
     }
 }
