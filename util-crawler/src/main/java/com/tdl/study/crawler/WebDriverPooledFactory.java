@@ -14,7 +14,7 @@ public class WebDriverPooledFactory implements PooledObjectFactory<WebDriver> {
 
     @Override // 销毁一个对象
     public void destroyObject(PooledObject<WebDriver> p) throws Exception {
-        p.getObject().close();
+        p.getObject().quit();
     }
 
     @Override // 对象是否有效
