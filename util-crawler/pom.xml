@@ -19,6 +19,7 @@
         <jsoup.version>1.10.3</jsoup.version>
         <json.version>20160810</json.version>
         <junit.version>4.12</junit.version>
+        <pool2.version>2.4.2</pool2.version>
     </properties>
     <dependencies>
         <dependency>
@@ -31,6 +32,12 @@
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
             <version>${jsoup.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+            <version>${pool2.version}</version>
         </dependency>
 
         <dependency>
