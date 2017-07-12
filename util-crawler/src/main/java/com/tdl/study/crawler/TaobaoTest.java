@@ -9,7 +9,7 @@ import java.util.List;
 
 public class TaobaoTest {
     public static void main(String[] args) {
-        WebDriver driver = WebDriverFactory.getPhantomJs("D:\\phantomjs-2.1.1-windows\\bin\\phantomjs.exe");
+        WebDriver driver = WebDriverUtil.getWebDriver();
 
         driver.get("https://www.taobao.com");
 

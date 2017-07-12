@@ -4,12 +4,18 @@ import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
-public class WebDriverFactory {
+public final class WebDriverUtil {
+    public static String PHANTOMJS_PATH_KEY = "phantomjs.binary.path";
 
-    public static RemoteWebDriver getPhantomJs(String path) {
+    public static RemoteWebDriver getWebDriver() {
+        return getPhantomJs();
+    }
+
+    private static RemoteWebDriver getPhantomJs() {
         System.out.println("OS name: " + System.getProperty("os.name", "Unknown"));
-        System.setProperty("phantomjs.binary.path", path);
-
+        if (null == System.getProperty(PHANTOMJS_PATH_KEY)) {
+            System.setProperty(PHANTOMJS_PATH_KEY, "D:\\phantomjs-2.1.1-windows\\bin\\phantomjs.exe");
+        }
         DesiredCapabilities capabilities = DesiredCapabilities.phantomjs();
 //        capabilities.setPlatform(Platform.ANDROID);
         capabilities.setCapability("phantomjs.page.settings.userAgent", "Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:50.0) Gecko/20100101 Firefox/50.0");

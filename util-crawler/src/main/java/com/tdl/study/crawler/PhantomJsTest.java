@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class PhantomJsTest {
     public static void main(String[] args) throws InterruptedException {
-        WebDriver driver = WebDriverFactory.getPhantomJs("D:\\phantomjs-2.1.1-windows\\bin\\phantomjs.exe");
+        WebDriver driver = WebDriverUtil.getWebDriver();
 
         driver.navigate().to("https://www.taobao.com/");
         String title = driver.getTitle();
