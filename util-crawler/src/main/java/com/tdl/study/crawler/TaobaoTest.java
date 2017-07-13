@@ -9,7 +9,7 @@ import java.util.List;
 
 public class TaobaoTest {
     public static void main(String[] args) {
-        WebDriver driver = WebDriverUtil.getWebDriver();
+        WebDriver driver = WebDriverPool.borrowOne();
 
         driver.get("https://www.taobao.com");
 
