@@ -1,5 +1,6 @@
-package com.tdl.study.crawler;
+package com.tdl.study.crawler.main;
 
+import com.tdl.study.crawler.WebDriverPool;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
