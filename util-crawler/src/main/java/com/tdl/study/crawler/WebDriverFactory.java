@@ -4,7 +4,7 @@ import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
-public final class WebDriverUtil {
+public final class WebDriverFactory {
     public static String PHANTOMJS_PATH_KEY = "phantomjs.binary.path";
 
     public static RemoteWebDriver getWebDriver() {
