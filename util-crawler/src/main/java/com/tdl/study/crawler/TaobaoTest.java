@@ -39,6 +39,6 @@ public class TaobaoTest {
         }
 
 //
-        driver.close();
+        WebDriverPool.returnOne(driver);
     }
 }

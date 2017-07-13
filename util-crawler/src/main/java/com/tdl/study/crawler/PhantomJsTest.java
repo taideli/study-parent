@@ -29,7 +29,6 @@ public class PhantomJsTest {
 
 //        new WebDriverWait(driver, 10).until(d -> !d.getTitle().equals(title));
 //        System.out.println("new page title is: " + driver.getTitle());
-        driver.close();
-        driver.quit();
+        WebDriverPool.returnOne(driver);
     }
 }

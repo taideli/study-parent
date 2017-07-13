@@ -49,7 +49,7 @@ public class BaiduTest {
 //            System.out.println();
         }
 
-        Store<String> store = new FileStore("E:\\writeTest\\" + /*url*/ "百度"+ "-" + keyWords + ".json");
+        Store<String> store = new FileStore("E:\\writeTest\\" + title+ "-" + keyWords + ".json");
         store.prepare();
 
         store.write(js.stream().map(JSONObject::toString).collect(Collectors.toList()));
@@ -73,6 +73,7 @@ public class BaiduTest {
         }*/
 
         driver.getWindowHandles().forEach(System.out::println);
-        driver.close();
+
+        WebDriverPool.returnOne(driver);
     }
 }
