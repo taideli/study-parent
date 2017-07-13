@@ -29,7 +29,7 @@ public abstract class StoreImpl<V> extends Thread implements Store<V> {
     }
 
     @Override
-    public long write(List<V> items) {
+    public void write(Iterable<V> items) {
         items.forEach(item -> {
             try {
                 queue.put(item);
@@ -37,7 +37,6 @@ public abstract class StoreImpl<V> extends Thread implements Store<V> {
                 throw new RuntimeException("failed to put item into queue.");
             }
         });
-        return items.size();
     }
 
     @Override
