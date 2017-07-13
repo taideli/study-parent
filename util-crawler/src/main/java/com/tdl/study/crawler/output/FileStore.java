@@ -18,7 +18,6 @@ public class FileStore extends StoreImpl<String> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        super.start();
         super.prepare();
     }
 
