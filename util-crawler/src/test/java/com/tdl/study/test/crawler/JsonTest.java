@@ -9,6 +9,6 @@ public class JsonTest {
     @Test
     public void load() {
         JSONObject obj = JSONUtil.load("C:/Users/taidl/Desktop/baidu.json");
-        System.out.println(obj.toString());
+        System.out.println(obj.toString(2));
     }
 }
