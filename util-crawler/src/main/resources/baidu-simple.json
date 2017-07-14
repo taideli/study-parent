@@ -1,0 +1,29 @@
+{
+	"seed" : "http://www.baidu.com",
+	"searchWords" : [
+		"丝绸制品 差",
+		"apache"
+	],
+	"resultPrefix" : "百度 - ",
+	"searchTarget" : "xpath=//*[@id=kw]",
+	"elementsTarget" : "css=div[tpl=se_com_default]",
+	"properties" : [
+		{
+			"target" : "xpath=./h3/a",
+			"property" : "title",
+			"value" : "text"
+		},
+		{
+			"target" : "xpath=./h3/a",
+			"property" : "link",
+			"value" : "attr:href"
+		},
+		{
+			"target" : "xpath=./*[@class=c-abstract]",
+			"property" : "desc",
+			"value" : "text"
+		}
+	],
+	"nextTarget" : "xpath=//a[class=n]"
+	
+}
