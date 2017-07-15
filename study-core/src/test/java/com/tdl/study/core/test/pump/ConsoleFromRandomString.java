@@ -8,8 +8,7 @@ public class ConsoleFromRandomString {
 
         RandomStringInput input = new RandomStringInput(100);
         ConsoleOutput output = new ConsoleOutput();
-//        Pump<UUID> pump = Pump.pump(input, 6, output.prior(UUID::toString));
-        Pump<String> pump = Pump.pump(input, 6, output.prior(s -> "---->" + s));
+        Pump<String> pump = Pump.pump(input, 6, output.prior(s -> "11---->" + s));
         pump.batch(10).open();
     }
 }

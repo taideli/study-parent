@@ -14,7 +14,7 @@ public interface Pump<V> extends Openable {
 
     }
 
-    public static <V> Pump<V> pump(Input<V> input, int parallelism, Output<V> dst) {
-        return new BasicPump<V>(input, parallelism, dst);
+    public static <V> Pump<V> pump(Input<V> input, int parallelism, Output<V> output) {
+        return new BasicPump<V>(input, parallelism, output);
     }
 }
