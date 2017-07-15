@@ -1,0 +1,41 @@
+{
+  "system": {
+    "support": [
+      {
+        "name": "jdk-8u45-linux-x64.tar.gz",
+        "target": "jdk1.8.0_45"
+      },
+      {
+        "name": "scala-2.11.8.tgz",
+        "target": "scala-2.11.8"
+      }
+    ]
+  },
+  "cluster": {
+    "devices": [
+      "192.168.1.101",
+      "192.168.1.102",
+      "192.168.1.103"
+    ],
+    "properties": {
+      "installHome": "/taidl",
+      "dataHome": "/taidl/data",
+      "logHome": "var/log/taidl"
+    }
+  },
+  "components": [
+    {
+      "name": "hadoop-2.7.3.tar.gz",
+      "devices": [
+        "192.168.1.101",
+        "192.168.1.102",
+        "192.168.1.103"
+      ],
+      "properties": {
+        "clusterName": "cluster",
+        "master": "192.168.1.101",
+        "ha": "192.168.1.102"
+      }
+    }
+  ]
+}

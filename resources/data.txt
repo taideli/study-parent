@@ -1,6 +1,8 @@
 # NewYork taxi trips of 2013 for chapter 8
 #http://www.andresmh.com/nyctaxitrips/
-
+# http://www.nyc.gov/html/tlc/html/about/trip_record_data.shtml
+# NewYork open data
+https://opendata.cityofnewyork.us/
 #交通数据共享网
 #http://www.transdata.cn/web/transdata/home.html
 
