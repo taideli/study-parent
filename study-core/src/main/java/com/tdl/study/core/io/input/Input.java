@@ -1,10 +1,12 @@
 package com.tdl.study.core.io.input;
 
 import com.tdl.study.core.io.IO;
+import com.tdl.study.core.io.Wrapper;
 
 import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -38,7 +40,11 @@ public interface Input<V> extends IO, Dequeue<V>, Supplier<V>, Iterator<V> {
     public static <T> Input<T> of(Supplier<? extends T> next, Supplier<Boolean> ending) {
 //        return of()
         // TODO: 2017/7/7 fixme cause unfinished ...
-        return null;
+        throw new RuntimeException("Unfinished code.....");
+    }
+
+    default <V1> Input<V1> then(Function<V, V1> conv) {
+        return Wrapper.wrap(this, (using, batchSize) -> dequeue(s -> using.apply(s.map(conv)), batchSize));
     }
 
     @Override
