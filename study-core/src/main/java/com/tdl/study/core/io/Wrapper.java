@@ -37,8 +37,10 @@ public interface Wrapper {
         }
 
         /** This override is redundant because it's abstract already*/
+/*
         @Override
         public abstract long dequeue(Function<Stream<V>, Long> using, long batchSize);
+*/
 
         @Override
         public long size() { return base.size();}
@@ -85,8 +87,10 @@ public interface Wrapper {
         }
 
         /** This override is redundant because it's abstract already*/
+/*
         @Override
         public abstract long enqueue(Stream<V> items);
+*/
 
         @Override
         public long size() { return base.size();}
