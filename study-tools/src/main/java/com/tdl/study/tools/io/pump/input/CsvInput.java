@@ -16,7 +16,7 @@ import java.nio.charset.Charset;
  * dequeue CSVRecord from local FileSystem
  */
 public class CsvInput extends InputImpl<CSVRecord> {
-    CSVParser parser;
+    private CSVParser parser;
 
     public CsvInput(String path) {
         super();
@@ -30,13 +30,12 @@ public class CsvInput extends InputImpl<CSVRecord> {
 
     @Override
     protected CSVRecord dequeue() {
-        System.out.println("into dequeue");
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return parser.iterator().hasNext() ? parser.iterator().next() : null;
+        return parser.iterator().next();
+    }
+
+    @Override
+    public boolean empty() {
+        return !parser.iterator().hasNext();
     }
 
     @Override
