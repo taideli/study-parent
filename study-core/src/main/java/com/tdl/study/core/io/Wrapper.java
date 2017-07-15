@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 
 public interface Wrapper {
 
-    static <T> WrapInput<T> wrap(Input<?> base, final Dequeue d) {
+    static <T> WrapInput<T> wrap(Input<?> base, final Dequeue<T> d) {
         return new WrapInput<T>(base) {
             @Override
             public long dequeue(Function<Stream<T>, Long> using, long batchSize) {
