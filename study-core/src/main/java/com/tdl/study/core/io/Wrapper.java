@@ -15,7 +15,7 @@ public interface Wrapper {
         return new WrapInput<T>(base) {
             @Override
             public long dequeue(Function<Stream<T>, Long> using, long batchSize) {
-                return 0;
+                return d.dequeue(using, batchSize);
             }
         };
     }
