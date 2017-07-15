@@ -1,4 +1,4 @@
-package com.tdl.study.hbase.io;
+package com.tdl.study.hbase.io.pump.input;
 
 import com.tdl.study.core.base.Namedly;
 import com.tdl.study.core.io.input.Input;

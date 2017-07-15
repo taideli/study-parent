@@ -1,6 +1,8 @@
 package com.tdl.study.core.test.pump;
 
 import com.tdl.study.core.io.pump.Pump;
+import com.tdl.study.core.io.input.RandomStringInput;
+import com.tdl.study.core.io.output.ConsoleOutput;
 
 public class ConsoleFromRandomString {
 

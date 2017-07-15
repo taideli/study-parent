@@ -1,7 +1,7 @@
 /**
  * Created by Taideli on 2017/7/9.
  */
-package com.tdl.study.hbase.io;
+package com.tdl.study.tools.io.pump;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -65,9 +65,9 @@ public class CSV2HBase {
         String recordNum = String.format("%32s", record.getRecordNumber());
         String rowkey = recordNum.charAt(recordNum.length()-1) + recordNum;
         Put put = new Put(rowkey.getBytes());
-        record.toMap().forEach((k, v) -> {
-            put.add(CellUtil.createCell())
-        });
+//        record.toMap().forEach((k, v) -> {
+//            put.add(CellUtil.createCell())
+//        });
         return put;
     }
 }

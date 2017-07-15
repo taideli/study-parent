@@ -22,6 +22,7 @@
         <module>study-netty</module>
         <module>study-scala</module>
         <module>study-spark</module>
+        <module>study-tools</module>
         <module>study-yarn</module>
         <module>study-zk</module>
     </modules>
@@ -37,6 +38,7 @@
         <zookeeper.version>3.4.9</zookeeper.version>
         <mongodb.version>3.4.2</mongodb.version>
         <junit.version>4.12</junit.version>
+        <commons-csv.version>1.4</commons-csv.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
