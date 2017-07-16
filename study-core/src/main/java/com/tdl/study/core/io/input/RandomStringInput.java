@@ -1,10 +1,11 @@
 package com.tdl.study.core.io.input;
 
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class RandomStringInput extends InputImpl<String> {
     private long capacity;
-    private volatile long ptr = 0;
+    private AtomicLong count = new AtomicLong(0);
 
     public RandomStringInput() {
         this(Long.MAX_VALUE);
@@ -18,12 +19,17 @@ public class RandomStringInput extends InputImpl<String> {
 
     @Override
     protected String dequeue() {
-        ptr++;
+        count.incrementAndGet();
         return UUID.randomUUID().toString();
     }
 
     @Override
     public boolean empty() {
-        return ptr >= capacity;
+        return count.get() >= capacity;
+    }
+
+    @Override
+    public void close() {
+        System.out.println("RandomString total: " + count.get());
     }
 }

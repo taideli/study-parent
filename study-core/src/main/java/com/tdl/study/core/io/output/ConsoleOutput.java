@@ -1,10 +1,12 @@
 package com.tdl.study.core.io.output;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 /**
  * to console
  */
 public class ConsoleOutput extends OutputImpl<String> {
-    private volatile long count = 0;
+    private AtomicLong count = new AtomicLong(0);
 
     public ConsoleOutput() {
         super();
@@ -13,7 +15,7 @@ public class ConsoleOutput extends OutputImpl<String> {
 
     @Override
     protected boolean enqueue(String item) {
-        count++;
+        count.incrementAndGet();
         System.out.println(item);
         return true;
     }
@@ -21,6 +23,6 @@ public class ConsoleOutput extends OutputImpl<String> {
     @Override
     public void close() {
         super.close();
-        System.out.println("ConsoleOutput receive [" + count + "] items.");
+        System.out.println("ConsoleOutput receive [" + count.get() + "] items.");
     }
 }
