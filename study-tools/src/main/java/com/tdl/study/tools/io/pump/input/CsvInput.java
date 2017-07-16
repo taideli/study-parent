@@ -9,6 +9,7 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
@@ -21,7 +22,8 @@ public class CsvInput extends InputImpl<CSVRecord> {
     public CsvInput(String path) {
         super();
         try {
-            parser = CSVParser.parse(new File(path), Charset.forName("UTF-8"), CSVFormat.DEFAULT);
+//            parser = CSVParser.parse(new File(path), Charset.forName("UTF-8"), CSVFormat.DEFAULT);
+            parser = CSVFormat.EXCEL.parse(new FileReader(path));
         } catch (IOException e) {
             throw new RuntimeException("failed to parse csv from file [" + path + "], for ", e);
         }

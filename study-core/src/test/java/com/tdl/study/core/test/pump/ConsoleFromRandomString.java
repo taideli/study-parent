@@ -8,9 +8,9 @@ public class ConsoleFromRandomString {
 
     public static void main(String[] args) {
 
-        RandomStringInput input = new RandomStringInput(100);
+        RandomStringInput input = new RandomStringInput(159867);
         ConsoleOutput output = new ConsoleOutput();
-        Pump<String> pump = Pump.pump(input, 6, output.prior(s -> "11---->" + s));
-        pump.batch(10).open();
+        Pump<String> pump = Pump.pump(input, 7, output.prior(s -> "11---->" + s));
+        pump.batch(3072).open();
     }
 }
