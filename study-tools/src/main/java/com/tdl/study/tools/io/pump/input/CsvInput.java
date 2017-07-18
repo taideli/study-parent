@@ -31,6 +31,13 @@ public class CsvInput extends InputImpl<CSVRecord> {
         open();
     }
 
+    /* logs:
+     * CSVRecord [comment=null, mapping=null, recordNumber=1, values=[VendorID, tpep_pickup_datetime, tpep_dropoff_datetime, passenger_count, trip_distance, pickup_longitude, pickup_latitude, RatecodeID, store_and_fwd_flag, dropoff_longitude, dropoff_latitude, payment_type, fare_amount, extra, mta_tax, tip_amount, tolls_amount, improvement_surcharge, total_amount]]
+     * CSVRecord [comment=null, mapping=null, recordNumber=2, values=[2, 2016-01-01 00:00:00, 2016-01-01 00:00:00, 2, 1.10, -73.990371704101563, 40.734695434570313, 1, N, -73.981842041015625, 40.732406616210937, 2, 7.5, 0.5, 0.5, 0, 0, 0.3, 8.8]]
+     * CSVRecord [comment=null, mapping=null, recordNumber=1, values=[VendorID, tpep_pickup_datetime, tpep_dropoff_datetime, passenger_count, trip_distance, pickup_longitude, pickup_latitude, RatecodeID, store_and_fwd_flag, dropoff_longitude, dropoff_latitude, payment_type, fare_amount, extra, mta_tax, tip_amount, tolls_amount, improvement_surcharge, total_amount]]
+     * CSVRecord [comment=null, mapping=null, recordNumber=4, values=[2, 2016-01-01 00:00:00, 2016-01-01 00:00:00, 1, 10.54, -73.984550476074219, 40.6795654296875, 1, N, -73.950271606445313, 40.788925170898438, 1, 33, 0.5, 0.5, 0, 0, 0.3, 34.3]]
+     * CSVRecord [comment=null, mapping=null, recordNumber=4, values=[2, 2016-01-01 00:00:00, 2016-01-01 00:00:00, 1, 10.54, -73.984550476074219, 40.6795654296875, 1, N, -73.950271606445313, 40.788925170898438, 1, 33, 0.5, 0.5, 0, 0, 0.3, 34.3]]
+     */
     @Override
     protected CSVRecord dequeue() {
         ptr.getAndIncrement();
