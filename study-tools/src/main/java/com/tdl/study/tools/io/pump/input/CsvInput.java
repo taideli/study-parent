@@ -5,25 +5,26 @@ package com.tdl.study.tools.io.pump.input;
 
 import com.tdl.study.core.io.input.InputImpl;
 import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * dequeue CSVRecord from local FileSystem
  */
 public class CsvInput extends InputImpl<CSVRecord> {
-    private CSVParser parser;
+    private List<CSVRecord> records;
+    private final int size;
+    private AtomicInteger ptr = new AtomicInteger(0);
 
     public CsvInput(String path) {
         super();
         try {
-//            parser = CSVParser.parse(new File(path), Charset.forName("UTF-8"), CSVFormat.DEFAULT);
-            parser = CSVFormat.EXCEL.parse(new FileReader(path));
+            records = CSVFormat.DEFAULT.parse(new FileReader(path)).getRecords();
+            size = records.size();
         } catch (IOException e) {
             throw new RuntimeException("failed to parse csv from file [" + path + "], for ", e);
         }
@@ -32,19 +33,22 @@ public class CsvInput extends InputImpl<CSVRecord> {
 
     @Override
     protected CSVRecord dequeue() {
-        return parser.iterator().next();
+        ptr.getAndIncrement();
+        return records.remove(0);
     }
 
-    @Override
+        @Override
     public boolean empty() {
-        return !parser.iterator().hasNext();
+        return ptr.get() >= size;
     }
 
     @Override
     public void close() {
-        try {
+        /*try {
             parser.close();
-        } catch (IOException ignored) {}
+        } catch (IOException ignored) {}*/
         super.close();
+
+        System.out.println("--size: " + size);
     }
 }
