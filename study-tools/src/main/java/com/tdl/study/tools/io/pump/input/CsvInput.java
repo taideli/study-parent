@@ -23,7 +23,7 @@ public class CsvInput extends InputImpl<CSVRecord> {
     public CsvInput(String path) {
         super();
         try {
-            records = CSVFormat.DEFAULT.parse(new FileReader(path)).getRecords();
+            records = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(new FileReader(path)).getRecords();
             size = records.size();
         } catch (IOException e) {
             throw new RuntimeException("failed to parse csv from file [" + path + "], for ", e);

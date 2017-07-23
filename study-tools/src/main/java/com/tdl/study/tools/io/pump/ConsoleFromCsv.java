@@ -11,9 +11,8 @@ import org.apache.commons.csv.CSVRecord;
 public class ConsoleFromCsv {
     public static void main(String[] args) {
 
-        CsvInput input = new CsvInput("C:\\Users\\taidl\\Desktop\\yellow-tripdata-2016-01-100-records.csv");
+        CsvInput input = new CsvInput("G:\\迅雷下载\\_tripdata_2015-2016\\fhv_tripdata_2015-01.csv");
         ConsoleOutput output = new ConsoleOutput();
-
         Pump<String> pump = Pump
                 .pump(input.then(CSVRecord::toString), 9, output)
                 .batch(23);
