@@ -105,9 +105,28 @@ public class Logger implements Serializable {
         return true;
     }
 
+    public boolean trace(CharSequence msg, Throwable t) {
+        submit(() -> logger.trace(msg.toString(), t));
+        return true;
+    }
+
+    public boolean debug(CharSequence msg, Throwable t) {
+        submit(() -> logger.debug(msg.toString(), t));
+        return true;
+    }
+
+    public boolean info(CharSequence msg, Throwable t) {
+        submit(() -> logger.info(msg.toString(), t));
+        return true;
+    }
+
+    public boolean warn(CharSequence msg, Throwable t) {
+        submit(() -> logger.warn(msg.toString(), t));
+        return true;
+    }
+
     public boolean error(CharSequence msg, Throwable e) {
         submit(() -> logger.error(msg.toString(), e));
         return true;
     }
-
 }
