@@ -10,16 +10,16 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>gap-tcp</module>
+        <!--<module>gap-tcp</module>-->
         <module>study-core</module>
-        <module>util-crawler</module>
+        <!--<module>util-crawler</module>-->
         <module>study-hbase</module>
         <module>study-hdfs</module>
         <module>study-java</module>
-        <module>study-jetty</module>
-        <module>study-kafka</module>
-        <module>study-mongodb</module>
-        <module>study-netty</module>
+        <!--<module>study-jetty</module>-->
+        <!--<module>study-kafka</module>-->
+        <!--<module>study-mongodb</module>-->
+        <!--<module>study-netty</module>-->
         <module>study-scala</module>
         <module>study-spark</module>
         <module>study-tools</module>
@@ -32,7 +32,7 @@
         <scala.version>2.11.8</scala.version>
         <scala.binary.version>2.11</scala.binary.version>
         <hadoop.version>2.7.3</hadoop.version>
-        <hbase.version>1.2.4</hbase.version>
+        <hbase.version>1.3.1</hbase.version>
         <spark.version>2.0.0</spark.version>
         <netty.version>4.1.9.Final</netty.version>
         <zookeeper.version>3.4.9</zookeeper.version>
