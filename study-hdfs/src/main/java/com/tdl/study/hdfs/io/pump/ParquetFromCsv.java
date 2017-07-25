@@ -12,7 +12,7 @@ public class ParquetFromCsv {
 
     public static void main(String[] args) throws IOException {
         String schema = "";
-        String csv = "/yellow_tripdata_2016-12.csv";
+        String csv = "/taxi+_zone_lookup.csv";
         HDFSCsvInput input = new HDFSCsvInput(csv);
         ParquetOutput output = new ParquetOutput(schema, "/newyork_trip_data",
                 csv.replaceAll("^/", ""));
