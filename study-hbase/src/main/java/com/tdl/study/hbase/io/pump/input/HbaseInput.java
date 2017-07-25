@@ -2,7 +2,6 @@ package com.tdl.study.hbase.io.pump.input;
 
 import com.tdl.study.core.base.Namedly;
 import com.tdl.study.core.io.input.Input;
-import com.tdl.study.core.io.input.InputImpl;
 import com.tdl.study.hbase.HBases;
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.*;

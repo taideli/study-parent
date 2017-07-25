@@ -15,14 +15,20 @@
     <packaging>jar</packaging>
 
     <properties>
-        <study-core.version>1.0</study-core.version>
+        <study-parent.version>1.0</study-parent.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>com.tdl.study.core</groupId>
             <artifactId>study-core</artifactId>
-            <version>${study-core.version}</version>
+            <version>${study-parent.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.tdl.study.hbase</groupId>
+            <artifactId>study-hbase</artifactId>
+            <version>${study-parent.version}</version>
         </dependency>
 
         <dependency>
