@@ -16,6 +16,7 @@
 
     <properties>
         <slf4j.version>1.7.25</slf4j.version>
+        <jool.version>0.9.12</jool.version>
     </properties>
 
     <dependencies>
@@ -29,6 +30,13 @@
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jool</artifactId>
+            <version>${jool.version}</version>
+        </dependency>
+
 
     </dependencies>
 </project>

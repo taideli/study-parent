@@ -30,6 +30,6 @@ public class RandomStringInput extends InputImpl<String> {
 
     @Override
     public void close() {
-        System.out.println("RandomString total: " + count.get());
+        System.out.println(this.getClass().getSimpleName() + " dequeue [" + count.get() + "] items.");
     }
 }

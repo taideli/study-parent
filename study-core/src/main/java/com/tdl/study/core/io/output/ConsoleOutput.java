@@ -23,6 +23,6 @@ public class ConsoleOutput extends OutputImpl<String> {
     @Override
     public void close() {
         super.close();
-        System.out.println("ConsoleOutput receive [" + count.get() + "] items.");
+        System.out.println("ConsoleOutput enqueue [" + count.get() + "] items.");
     }
 }
