@@ -16,7 +16,6 @@
 
     <properties>
         <study-core.version>1.0</study-core.version>
-        <parquet.version>1.7.0</parquet.version>
     </properties>
 
     <dependencies>
@@ -24,12 +23,6 @@
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-common</artifactId>
             <version>${hadoop.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-csv</artifactId>
-            <version>${commons-csv.version}</version>
         </dependency>
 
         <dependency>
@@ -43,7 +36,6 @@
             <artifactId>parquet-hadoop</artifactId>
             <version>${parquet.version}</version>
         </dependency>
-
 
     </dependencies>
 </project>

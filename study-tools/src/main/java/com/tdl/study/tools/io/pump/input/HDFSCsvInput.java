@@ -1,8 +1,7 @@
-package com.tdl.study.hdfs.io.pump.input;
+package com.tdl.study.tools.io.pump.input;
 
 import com.tdl.study.core.io.input.InputImpl;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVRecord;
+import com.tdl.study.tools.io.pump.CSVRecord;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -26,7 +25,7 @@ public class HDFSCsvInput extends InputImpl<CSVRecord> {
         Configuration conf = new Configuration();
         FileSystem hdfs = FileSystem.get(conf);
         Reader reader = new InputStreamReader(hdfs.open(new Path(path)));
-        records = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(reader).getRecords();
+        records = null;//CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(reader).getRecords();
         reader.close();
         hdfs.close();
         open();

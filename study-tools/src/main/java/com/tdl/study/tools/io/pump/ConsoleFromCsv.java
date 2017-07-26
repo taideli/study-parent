@@ -6,12 +6,16 @@ package com.tdl.study.tools.io.pump;
 import com.tdl.study.core.io.output.ConsoleOutput;
 import com.tdl.study.core.io.pump.Pump;
 import com.tdl.study.tools.io.pump.input.CsvInput;
-import org.apache.commons.csv.CSVRecord;
+
+import java.io.IOException;
 
 public class ConsoleFromCsv {
-    public static void main(String[] args) {
-
-        CsvInput input = new CsvInput("G:\\迅雷下载\\_tripdata_2015-2016\\fhv_tripdata_2015-01.csv");
+    public static void main(String[] args) throws IOException {
+        if (args.length < 1) {
+            System.out.println("Usage: " + ConsoleFromCsv.class.getSimpleName() + " <file.csv>");
+            System.exit(1);
+        }
+        CsvInput input = new CsvInput(args[0]);
         ConsoleOutput output = new ConsoleOutput();
         Pump<String> pump = Pump
                 .pump(input.then(CSVRecord::toString), 9, output)
