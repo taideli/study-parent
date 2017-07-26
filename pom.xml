@@ -10,9 +10,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <!--<module>gap-tcp</module>-->
         <module>study-core</module>
-        <!--<module>util-crawler</module>-->
         <module>study-hbase</module>
         <module>study-hdfs</module>
         <module>study-java</module>
