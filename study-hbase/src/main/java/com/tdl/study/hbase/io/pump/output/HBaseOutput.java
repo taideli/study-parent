@@ -55,7 +55,6 @@ public class HBaseOutput extends BatchOutput<Put> {
             conn.close();
         } catch (IOException ignored) {}
         super.close();
-        // TODO: 2017/7/26 size is incorrect (always 0), fix me
         logger().info(getClass().getSimpleName() + " enqueue [" + size() + "] items.");
     }
 }
