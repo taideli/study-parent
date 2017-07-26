@@ -15,6 +15,7 @@ import java.util.stream.Stream;
  */
 public abstract class BatchOutput<V> extends Namedly implements Output<V> {
     private int batchsize = 1000;
+    private AtomicLong count = new AtomicLong(0);
 
     public abstract long enqueue(List<V> items);
 
@@ -32,8 +33,12 @@ public abstract class BatchOutput<V> extends Namedly implements Output<V> {
                     enqueue(batch.stream().map(Tuple2::v1).collect(Collectors.toList()))
                 )
             );
-
+        this.count.addAndGet(count.get());
         return count.get();
     }
 
+    @Override
+    public long size() {
+        return count.get();
+    }
 }

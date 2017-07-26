@@ -6,7 +6,6 @@ import java.util.concurrent.atomic.AtomicLong;
  * to console
  */
 public class ConsoleOutput extends OutputImpl<String> {
-    private AtomicLong count = new AtomicLong(0);
 
     public ConsoleOutput() {
         super();
@@ -15,7 +14,6 @@ public class ConsoleOutput extends OutputImpl<String> {
 
     @Override
     protected boolean enqueue(String item) {
-        count.incrementAndGet();
         System.out.println(item);
         return true;
     }
@@ -23,6 +21,6 @@ public class ConsoleOutput extends OutputImpl<String> {
     @Override
     public void close() {
         super.close();
-        System.out.println("ConsoleOutput enqueue [" + count.get() + "] items.");
+        System.out.println("ConsoleOutput enqueue [" + size() + "] items.");
     }
 }

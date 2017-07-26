@@ -55,5 +55,6 @@ public class HBaseOutput extends BatchOutput<Put> {
             conn.close();
         } catch (IOException ignored) {}
         super.close();
+        logger().info(getClass().getSimpleName() + " enqueue [" + size() + "] items.");
     }
 }
