@@ -31,7 +31,7 @@ public class HBaseOutput extends BatchOutput<Put> {
         if (! admin.tableExists(table)) {
             HTableDescriptor desc = new HTableDescriptor(table);
             Stream.of(families).map(HColumnDescriptor::new).forEach(desc::addFamily);
-            admin.createTable(desc);
+            admin.createTable(desc, HBases.SPLITS_OTC);
         }
         admin.close();
     }
@@ -55,6 +55,7 @@ public class HBaseOutput extends BatchOutput<Put> {
             conn.close();
         } catch (IOException ignored) {}
         super.close();
+        // TODO: 2017/7/26 size is incorrect (always 0), fix me
         logger().info(getClass().getSimpleName() + " enqueue [" + size() + "] items.");
     }
 }
