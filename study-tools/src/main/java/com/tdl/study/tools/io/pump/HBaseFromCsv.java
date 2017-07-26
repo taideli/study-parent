@@ -7,9 +7,12 @@ import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.util.Bytes;
 
 import java.io.IOException;
-import java.util.UUID;
+import java.util.List;
 
 public class HBaseFromCsv {
+    private static byte[] HBASE_TABLE_FAMILY = Bytes.toBytes("f");
+    private static byte[] HBASE_TABLE_QUALIFIER = Bytes.toBytes("v");
+
     public static void main(String[] args) throws IOException {
         if (args.length != 2) {
             System.out.println("Usage: <csv> <table>");
@@ -21,9 +24,15 @@ public class HBaseFromCsv {
         output.batchsize(2048);
 
         Pump pump = Pump.pump(input.then(record -> {
-            String key = record.getRecordNumber() + UUID.randomUUID().toString();
-            Put put = new Put(Bytes.toBytes(key), System.currentTimeMillis());
-            record.toMap().forEach((k, v) -> put.addColumn(Bytes.toBytes("f"), Bytes.toBytes(k), Bytes.toBytes(v)));
+            String key = (record.getRecordNumber() % 10) + String.format("%015d", record.getRecordNumber());
+            Put put = new Put(Bytes.toBytes(key));
+            List<String> fields = record.toList();
+            StringBuilder value = new StringBuilder();
+            for (int i = 0; i < fields.size(); i++) {
+                value.append(fields.get(i));
+                if (i != fields.size()-1) value.append('\t');
+            }
+            put.addColumn(HBASE_TABLE_FAMILY, HBASE_TABLE_QUALIFIER, Bytes.toBytes(value.toString()));
             return put;
         }), 4, output);
 
