@@ -88,6 +88,6 @@ public class CsvInput extends InputImpl<CSVRecord> {
         } catch (IOException ignored) {}
         super.close();
 
-        System.out.println(getClass().getSimpleName() + " dequeue [" + currentLine.get() + "] items.");
+        logger().info(getClass().getSimpleName() + " dequeue [" + currentLine.get() + "] items.");
     }
 }
