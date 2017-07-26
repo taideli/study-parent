@@ -40,7 +40,7 @@ public class CSVRecord implements Iterable<String> {
         return map;
     }
 
-    private List<String> toList() {
+    public List<String> toList() {
         return Arrays.asList(values);
     }
 
