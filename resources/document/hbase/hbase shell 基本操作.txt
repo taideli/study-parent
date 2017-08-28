@@ -6,6 +6,7 @@ put 'NewYorkTaxiTrips', 'rowkey1', 'f', 'hello NewYork'
 
 3. 遍历数据
 scan 'NewYorkTaxiTrips'
+scan 'NewYorkTaxiTrips', {LIMIT => 20}
 
 4. 删除一条记录
 delete 'NewYorkTaxiTrips', 'rowkey1', 'f', 1499246737419
@@ -16,3 +17,16 @@ drop 'NewYorkTaxiTrips'
 
 6. 手动刷入硬盘
 flush 'NewYorkTaxiTrips'
+
+7. 访问16010要先在防火墙中放行
+[root@hbase conf]# firewall-cmd --permanent --add-port=16010/tcp
+success
+[root@hbase conf]# firewall-cmd --permanent --add-port=16030/tcp
+success
+[root@hbase conf]# firewall-cmd --reload
+success
+[root@hbase conf]#
+
+8. rowkey 设计
+1. 不要太长，否则占用空间会比较大
+2. http://blog.csdn.net/songchunhong/article/details/50487105
