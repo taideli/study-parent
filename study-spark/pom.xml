@@ -17,6 +17,7 @@
     <properties>
         <nscala_time.version>2.16.0</nscala_time.version>
         <esri-geometry.version>1.2.1</esri-geometry.version>
+        <spray-json.version>1.3.3</spray-json.version>
     </properties>
 
     <dependencies>
@@ -63,6 +64,12 @@
             <version>${esri-geometry.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>io.spray</groupId>
+            <artifactId>spray-json_2.11</artifactId>
+            <version>${spray-json.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -79,6 +86,16 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <scalaVersion>${scala.version}</scalaVersion>
+                    <scalaCompatVersion>${scala.version}</scalaCompatVersion>
+                    <javacArgs>
+                        <javacArg>-source</javacArg>
+                        <javacArg>1.8</javacArg>
+                        <javacArg>-target</javacArg>
+                        <javacArg>1.8</javacArg>
+                    </javacArgs>
+                </configuration>
             </plugin>
         </plugins>
     </build>
