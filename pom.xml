@@ -16,7 +16,7 @@
         <module>study-java</module>
         <!--<module>study-jetty</module>-->
         <!--<module>study-kafka</module>-->
-        <!--<module>study-mongodb</module>-->
+        <module>study-mongodb</module>
         <!--<module>study-netty</module>-->
         <module>study-scala</module>
         <module>study-spark</module>
@@ -35,9 +35,10 @@
         <spark.version>2.0.0</spark.version>
         <netty.version>4.1.9.Final</netty.version>
         <zookeeper.version>3.4.9</zookeeper.version>
-        <mongodb.version>3.4.2</mongodb.version>
         <junit.version>4.12</junit.version>
         <commons-csv.version>1.4</commons-csv.version>
+
+        <exec-maven.version>1.5.0</exec-maven.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>

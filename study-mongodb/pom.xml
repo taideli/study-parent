@@ -14,10 +14,14 @@
     <groupId>com.tdl.study.mongodb</groupId>
     <packaging>jar</packaging>
 
+    <properties>
+        <mongodb.version>3.5.0</mongodb.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.mongodb</groupId>
-            <artifactId>mongo-java-driver</artifactId>
+            <artifactId>mongodb-driver</artifactId>
             <version>${mongodb.version}</version>
         </dependency>
     </dependencies>

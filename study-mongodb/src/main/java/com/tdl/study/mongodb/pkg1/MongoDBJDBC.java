@@ -16,17 +16,17 @@ import java.util.List;
 public class MongoDBJDBC {
     public static void main(String[] args) {
         try {
-            ServerAddress serverAddress = new ServerAddress("172.30.10.101", 22001);
+            ServerAddress serverAddress = new ServerAddress("172.16.16.232", 27017);
             List<ServerAddress> addrs = new ArrayList<>();
             addrs.add(serverAddress);
 
             MongoCredential credential =
-                    MongoCredential.createScramSha1Credential("people", "people", "".toCharArray());
+                    MongoCredential.createScramSha1Credential("user4db", "!@#QAZ123qaz", "".toCharArray());
             List<MongoCredential> credentials = new ArrayList<>();
             credentials.add(credential);
 
             MongoClient mongoClient = new MongoClient(addrs, credentials);
-            MongoDatabase mongoDatabase = mongoClient.getDatabase("people");
+            MongoDatabase mongoDatabase = mongoClient.getDatabase("db");
             System.out.println("connect to database successfully");
 
             // create collection
