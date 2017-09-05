@@ -16,7 +16,7 @@
         <module>study-java</module>
         <!--<module>study-jetty</module>-->
         <!--<module>study-kafka</module>-->
-        <module>study-mongodb</module>
+        <module>study-mongo</module>
         <!--<module>study-netty</module>-->
         <module>study-scala</module>
         <module>study-spark</module>
