@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>study-mongodb</artifactId>
-    <groupId>com.tdl.study.mongodb</groupId>
+    <groupId>com.tdl.study.mongo</groupId>
     <packaging>jar</packaging>
 
     <properties>

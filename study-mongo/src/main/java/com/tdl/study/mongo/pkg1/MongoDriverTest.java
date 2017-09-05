@@ -1,4 +1,4 @@
-package com.tdl.study.mongodb.pkg1;
+package com.tdl.study.mongo.pkg1;
 
 import com.mongodb.*;
 import com.mongodb.client.MongoCollection;
