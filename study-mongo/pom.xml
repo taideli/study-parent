@@ -10,7 +10,7 @@
         <version>1.0</version>
     </parent>
 
-    <artifactId>study-mongodb</artifactId>
+    <artifactId>study-mongo</artifactId>
     <groupId>com.tdl.study.mongo</groupId>
     <packaging>jar</packaging>
 
