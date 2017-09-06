@@ -1,20 +1,34 @@
 package com.tdl.study.core.io.output;
 
-import java.util.concurrent.atomic.AtomicLong;
+import java.io.PrintStream;
 
 /**
- * to console
+ * print string to Console
  */
 public class ConsoleOutput extends OutputImpl<String> {
+    private final PrintStream stream;
 
+    /**
+     * print string to Console
+     * use System.out as default
+     */
     public ConsoleOutput() {
+        this(false);
+    }
+
+    /**
+     * print string to Console
+     * @param stderr true - use System.err; false - use System.out
+     */
+    public ConsoleOutput(boolean stderr) {
         super();
+        stream = stderr ? System.err : System.out;
         open();
     }
 
     @Override
     protected boolean enqueue(String item) {
-        System.out.println(item);
+        stream.println(item);
         return true;
     }
 

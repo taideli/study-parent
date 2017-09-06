@@ -69,12 +69,22 @@ public class Logger implements Serializable {
         return true;
     }
 
+    public boolean trace(String format, Object... args) {
+        submit(() -> logger.trace(format, args));
+        return true;
+    }
+
     public boolean isDebugEnabled() {
         return logger.isDebugEnabled();
     }
 
     public boolean debug(CharSequence msg) {
         submit(() -> logger.debug(msg.toString()));
+        return true;
+    }
+
+    public boolean debug(String format, Object... args) {
+        submit(() -> logger.debug(format, args));
         return true;
     }
 
@@ -87,6 +97,11 @@ public class Logger implements Serializable {
         return true;
     }
 
+    public boolean info(String format, Object... args) {
+        submit(() -> logger.info(format, args));
+        return true;
+    }
+
     public boolean isWarnEnabled() {
         return logger.isWarnEnabled();
     }
@@ -96,12 +111,22 @@ public class Logger implements Serializable {
         return true;
     }
 
+    public boolean warn(String format, Object... args) {
+        submit(() -> logger.warn(format, args));
+        return true;
+    }
+
     public boolean isErrorEnabled() {
         return logger.isErrorEnabled();
     }
 
     public boolean error(CharSequence msg) {
         submit(() -> logger.error(msg.toString()));
+        return true;
+    }
+
+    public boolean error(String format, Object... args) {
+        submit(() -> logger.error(format, args));
         return true;
     }
 
