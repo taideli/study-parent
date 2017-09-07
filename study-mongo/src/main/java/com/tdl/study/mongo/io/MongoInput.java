@@ -93,7 +93,9 @@ public class MongoInput extends InputImpl<Document> {
         else filter = Filters.and(filters);
         FindIterable<Document> it = null == filter ? coll.find() : coll.find(filter);
         mc = it.limit(limit).batchSize(batch).iterator();
-        logger().info("find {} records with filter: {}", null == filter ? coll.count() : coll.count(filter), filter);
+        logger().info("find {} records with filter: {} while limit is {}",
+                null == filter ? coll.count() : coll.count(filter),
+                filter, limit);
     }
 
 
