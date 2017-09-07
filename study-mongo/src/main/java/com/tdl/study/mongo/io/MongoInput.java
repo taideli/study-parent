@@ -19,24 +19,46 @@ import java.util.stream.Stream;
  */
 public class MongoInput extends InputImpl<Document> {
     private MongoClient client;
-    private FindIterable<Document> it;
     private MongoCursor<Document> mc;
+    private int limit, batch;
     private final ReentrantReadWriteLock lock;
+
+    /**
+     * specify a mongo data source use standard mongo uri use default batchsize, drag all data of this source
+     * @param mongoURI see {@link com.mongodb.MongoClientURI}
+     * @param andFilters filters that combined by 'AND'
+     */
+    public MongoInput(String mongoURI, Bson... andFilters) {
+        this(mongoURI, 0, andFilters);
+    }
 
     /**
      * specify a mongo data source use standard mongo uri
      * @param mongoURI see {@link com.mongodb.MongoClientURI}
      * @param andFilters filters that combined by 'AND'
+     * @param limit sets the limit that will return
      */
-    public MongoInput(String mongoURI, Bson... andFilters) {
+    public MongoInput(String mongoURI, int limit, Bson... andFilters) {
+        this(mongoURI, 0, limit, andFilters);
+    }
+
+    /**
+     * specify a mongo data source use standard mongo uri
+     * @param mongoURI see {@link com.mongodb.MongoClientURI}
+     * @param andFilters filters that combined by 'AND'
+     * @param batch Sets the number of documents to return per batch.
+     * @param limit sets the limit that will return
+     */
+    public MongoInput(String mongoURI, int batch, int limit, Bson... andFilters) {
         super();
         MongoClientURI uri = new MongoClientURI(mongoURI);
         client = new MongoClient(uri);
         String dbName = uri.getDatabase();
         String collection = uri.getCollection();
         lock = new ReentrantReadWriteLock();
+        this.limit = limit; this.batch = batch;
 
-        Bson[] filters = Stream.of(andFilters).filter(Objects::nonNull).toArray(Bson[]::new);
+        Bson[] filters = null == andFilters ? null : Stream.of(andFilters).filter(Objects::nonNull).toArray(Bson[]::new);
         opening(() -> open(dbName, collection, filters));
         closing(this::closeMongo);
         open();
@@ -69,20 +91,11 @@ public class MongoInput extends InputImpl<Document> {
         if (null == filters || 0 == filters.length) filter = null;
         else if (1 == filters.length) filter = filters[0];
         else filter = Filters.and(filters);
-        it = null == filter ? coll.find() : coll.find(filter);
-        mc = it.iterator();
+        FindIterable<Document> it = null == filter ? coll.find() : coll.find(filter);
+        mc = it.limit(limit).batchSize(batch).iterator();
         logger().info("find {} records with filter: {}", null == filter ? coll.count() : coll.count(filter), filter);
     }
 
-    public MongoInput batch(int size) {
-        it.batchSize(size);
-        return this;
-    }
-
-    public MongoInput limit(int size) {
-        it.limit(size);
-        return this;
-    }
 
     private void closeMongo() {
         logger().info("closing mongo client.");
