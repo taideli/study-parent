@@ -10,15 +10,25 @@ import com.tdl.study.core.io.input.InputImpl;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
+import java.util.Objects;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.stream.Stream;
 
+/**
+ * Drag data from mongo
+ */
 public class MongoInput extends InputImpl<Document> {
     private MongoClient client;
     private FindIterable<Document> it;
     private MongoCursor<Document> mc;
     private final ReentrantReadWriteLock lock;
 
-    public MongoInput(String mongoURI, Bson... filters) {
+    /**
+     * specify a mongo data source use standard mongo uri
+     * @param mongoURI see {@link com.mongodb.MongoClientURI}
+     * @param andFilters filters that combined by 'AND'
+     */
+    public MongoInput(String mongoURI, Bson... andFilters) {
         super();
         MongoClientURI uri = new MongoClientURI(mongoURI);
         client = new MongoClient(uri);
@@ -26,6 +36,7 @@ public class MongoInput extends InputImpl<Document> {
         String collection = uri.getCollection();
         lock = new ReentrantReadWriteLock();
 
+        Bson[] filters = Stream.of(andFilters).filter(Objects::nonNull).toArray(Bson[]::new);
         opening(() -> open(dbName, collection, filters));
         closing(this::closeMongo);
         open();
@@ -60,7 +71,7 @@ public class MongoInput extends InputImpl<Document> {
         else filter = Filters.and(filters);
         it = null == filter ? coll.find() : coll.find(filter);
         mc = it.iterator();
-        logger().info("find %d records", null == filter ? coll.count() : coll.count(filter));
+        logger().info("find {} records with filter: {}", null == filter ? coll.count() : coll.count(filter), filter);
     }
 
     public MongoInput batch(int size) {
