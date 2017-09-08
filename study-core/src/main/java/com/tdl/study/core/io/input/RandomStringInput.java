@@ -13,8 +13,8 @@ public class RandomStringInput extends InputImpl<String> {
 
     public RandomStringInput(long capacity) {
         super();
-        open();
         this.capacity = capacity;
+        open();
     }
 
     @Override
@@ -30,6 +30,6 @@ public class RandomStringInput extends InputImpl<String> {
 
     @Override
     public void close() {
-        System.out.println(this.getClass().getSimpleName() + " dequeue [" + count.get() + "] items.");
+        logger().info("{} dequeue [{}] items.", getClass().getSimpleName(), count.get());
     }
 }

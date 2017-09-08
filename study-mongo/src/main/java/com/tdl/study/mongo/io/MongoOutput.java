@@ -76,7 +76,7 @@ public class MongoOutput extends BatchOutput<Document> {
     @Override
     public void close() {
         client.close();
-        System.out.println(getClass().getSimpleName() + " enqueue " + size() + " records.");
+        logger().info("{} enqueue [{}] items.", getClass().getSimpleName(), size());
         super.close();
     }
 }
