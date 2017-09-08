@@ -31,5 +31,13 @@
             <artifactId>mongodb-driver</artifactId>
             <version>${mongodb.version}</version>
         </dependency>
+
+<!-- open this if you want use async driver -->
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver-async</artifactId>
+            <version>${mongodb.version}</version>
+        </dependency>
+
     </dependencies>
 </project>
