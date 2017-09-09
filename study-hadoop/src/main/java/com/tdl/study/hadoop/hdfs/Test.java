@@ -1,10 +1,9 @@
-package com.tdl.study.hdfs.pkg1.hello;
+package com.tdl.study.hadoop.hdfs;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.PathFilter;
 
 import java.io.IOException;
 import java.util.stream.Stream;

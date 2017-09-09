@@ -1,4 +1,4 @@
-package com.tdl.study.hdfs.io.pump.output;
+package com.tdl.study.hadoop.hdfs.io.output;
 
 import com.tdl.study.core.io.output.OutputImpl;
 import org.apache.hadoop.fs.Path;
