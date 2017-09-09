@@ -19,19 +19,19 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.tdl.study.core</groupId>
+            <groupId>com.tdl.study</groupId>
             <artifactId>study-core</artifactId>
             <version>${study-parent.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>com.tdl.study.hbase</groupId>
+            <groupId>com.tdl.study</groupId>
             <artifactId>study-hbase</artifactId>
             <version>${study-parent.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>com.tdl.study.hadoop</groupId>
+            <groupId>com.tdl.study</groupId>
             <artifactId>study-hadoop</artifactId>
             <version>${study-parent.version}</version>
         </dependency>

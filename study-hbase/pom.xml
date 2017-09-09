@@ -37,7 +37,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.tdl.study.core</groupId>
+            <groupId>com.tdl.study</groupId>
             <artifactId>study-core</artifactId>
             <version>${study-core.version}</version>
         </dependency>

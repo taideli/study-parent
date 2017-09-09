@@ -20,7 +20,7 @@
     <dependencies>
 
         <dependency>
-            <groupId>com.tdl.study.core</groupId>
+            <groupId>com.tdl.study</groupId>
             <artifactId>study-core</artifactId>
             <version>1.0</version>
         </dependency>
