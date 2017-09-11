@@ -94,7 +94,7 @@
                 </executions>
                 <configuration>
                     <scalaVersion>${scala.version}</scalaVersion>
-                    <scalaCompatVersion>${scala.version}</scalaCompatVersion>
+                    <scalaCompatVersion>${scala.binary.version}</scalaCompatVersion>
                     <javacArgs>
                         <javacArg>-source</javacArg>
                         <javacArg>1.8</javacArg>
