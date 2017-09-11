@@ -10,15 +10,31 @@
         <version>1.0</version>
     </parent>
 
-    <artifactId>study-yarn</artifactId>
-    <groupId>com.tdl.study.yarn</groupId>
+    <artifactId>study-hadoop</artifactId>
     <packaging>jar</packaging>
+
+    <properties>
+        <study-core.version>1.0</study-core.version>
+    </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-yarn-common</artifactId>
+            <artifactId>hadoop-common</artifactId>
             <version>${hadoop.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.tdl.study</groupId>
+            <artifactId>study-core</artifactId>
+            <version>${study-core.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.parquet</groupId>
+            <artifactId>parquet-hadoop</artifactId>
+            <version>${parquet.version}</version>
+        </dependency>
+
     </dependencies>
 </project>

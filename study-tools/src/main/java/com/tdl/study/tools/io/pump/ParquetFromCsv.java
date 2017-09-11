@@ -1,7 +1,7 @@
 package com.tdl.study.tools.io.pump;
 
 import com.tdl.study.core.io.pump.Pump;
-import com.tdl.study.hdfs.io.pump.output.ParquetOutput;
+import com.tdl.study.hadoop.hdfs.io.output.ParquetOutput;
 import com.tdl.study.tools.io.pump.input.HDFSCsvInput;
 import org.apache.parquet.example.data.Group;
 import org.apache.parquet.example.data.GroupFactory;

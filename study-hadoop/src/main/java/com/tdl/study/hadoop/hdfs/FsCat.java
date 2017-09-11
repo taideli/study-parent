@@ -1,4 +1,4 @@
-package com.tdl.study.hdfs.pkg3.fs;
+package com.tdl.study.hadoop.hdfs;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;

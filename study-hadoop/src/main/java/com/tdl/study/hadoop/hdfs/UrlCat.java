@@ -1,4 +1,4 @@
-package com.tdl.study.hdfs.pkg2.urlcat;
+package com.tdl.study.hadoop.hdfs;
 
 import org.apache.hadoop.fs.FsUrlStreamHandlerFactory;
 import org.apache.hadoop.io.IOUtils;
