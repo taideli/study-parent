@@ -25,13 +25,13 @@ public class HFilesInput extends InputImpl<Cell> {
     private ConcurrentLinkedQueue<Pair<HFileScanner, ReentrantReadWriteLock>> scanners = new ConcurrentLinkedQueue<>();
     private Configuration conf;
 
-
-    public HFilesInput(boolean isOnHdfs, String path) throws IOException {
-        this(HFilesInput.class.getSimpleName(), isOnHdfs, path);
+    public HFilesInput(boolean isOnHdfs, List<String> paths) throws IOException {
+        this(HFilesInput.class.getSimpleName(), isOnHdfs, paths);
     }
 
-    public HFilesInput(String name, boolean isOnHdfs, String path) throws IOException {
+    public HFilesInput(String name, boolean isOnHdfs, List<String> paths) throws IOException {
         super(name);
+        assertPaths(paths);
         conf = new Configuration();
         if (isOnHdfs) {
             fs = FileSystem.get(conf);
@@ -39,23 +39,27 @@ public class HFilesInput extends InputImpl<Cell> {
             fs = FileSystem.getLocal(conf);
         }
 
-        Path p = new Path(path);
-        List<FileStatus> fileStatuses = findAllMatchFilesRecursively(fs, p, (s) -> {
-            try {
-                return HFile.isHFileFormat(fs, s);
-            } catch (IOException e) {
-                return false;
-            }
-        });
-
-        logger().info("find {} matched file{} in directory: {}",
-                fileStatuses.size(), fileStatuses.size() <=1 ? "" : "s", fs.getFileStatus(p).getPath().toString());
-        fileStatuses.forEach(s -> logger().info(s.getPath().toString()));
-        fileStatuses.stream().map(FileStatus::getPath).map(this::mapScanner).filter(Objects::nonNull).forEach(s -> {
+        List<FileStatus> statuses = new ArrayList<>();
+        paths.stream().map(Path::new).filter(Objects::nonNull).forEach(path ->
+            statuses.addAll(findAllMatchFilesRecursively(fs, path, (s) -> {
+                try {
+                    return HFile.isHFileFormat(fs, s);
+                } catch (IOException e) {
+                    return false;
+                }
+            }))
+        );
+        logger().info("find {} matched file{}: \n{}", statuses.size(), statuses.size() <= 1 ? "" : "s",
+            statuses.stream().map(s -> s.getPath().toString() + "\n").reduce("", (a, b) -> a + b));
+        statuses.stream().map(FileStatus::getPath).map(this::mapScanner).filter(Objects::nonNull).forEach(s -> {
             ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
             scanners.add(new Pair<>(s, lock));
         });
         open();
+    }
+
+    private void assertPaths(List<String> paths) {
+        if (null == paths || paths.size() < 1) throw new IllegalArgumentException("no path assigned.");
     }
 
     private List<FileStatus> findAllMatchFilesRecursively(FileSystem fs, Path path, Predicate<FileStatus> filter) {
@@ -65,8 +69,8 @@ public class HFilesInput extends InputImpl<Cell> {
             fileStatusesInCurrentDir.addAll(Arrays.asList(fs.listStatus(path)));
         } catch (IOException ignored) {}
         fileStatusesInCurrentDir.stream().filter(filter).forEach(statusList::add);
-        fileStatusesInCurrentDir.stream().filter(FileStatus::isDirectory)
-                .forEach(sd -> statusList.addAll(findAllMatchFilesRecursively(fs, sd.getPath(), filter)));
+        fileStatusesInCurrentDir.stream().filter(FileStatus::isDirectory).forEach(sd ->
+            statusList.addAll(findAllMatchFilesRecursively(fs, sd.getPath(), filter)));
         return statusList;
     }
 

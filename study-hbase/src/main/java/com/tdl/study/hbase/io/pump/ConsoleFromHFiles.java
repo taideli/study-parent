@@ -7,10 +7,11 @@ import org.apache.hadoop.hbase.CellUtil;
 import org.apache.hadoop.hbase.util.Bytes;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class ConsoleFromHFiles {
     public static void main(String[] args) throws IOException {
-        HFilesInput input = new HFilesInput(false, args[0]);
+        HFilesInput input = new HFilesInput(false, Arrays.asList(args));
         ConsoleOutput output = new ConsoleOutput();
 
         Pump pump = Pump.pump(input.then(cell ->
