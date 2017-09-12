@@ -87,11 +87,12 @@ public class HFilesInput extends InputImpl<Cell> {
     }
 
     private static boolean scannerHasNext(HFileScanner scanner) {
+        boolean nonEmpty = false;
         try {
-            return scanner.next();
-        } catch (IOException e) {
-            return false;
-        }
+            nonEmpty = scanner.next();
+            if (!nonEmpty) scanner.getReader().close();
+        } catch (IOException ignored) {}
+        return nonEmpty;
     }
 
     @Override
