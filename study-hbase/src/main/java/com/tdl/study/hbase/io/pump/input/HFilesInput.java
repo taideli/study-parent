@@ -9,21 +9,21 @@ import org.apache.hadoop.hbase.Cell;
 import org.apache.hadoop.hbase.io.hfile.CacheConfig;
 import org.apache.hadoop.hbase.io.hfile.HFile;
 import org.apache.hadoop.hbase.io.hfile.HFileScanner;
+import org.apache.hadoop.hbase.util.Pair;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public class HFilesInput extends InputImpl<Cell> {
     private final FileSystem fs;
-    private List<HFileScanner> scanners;
+    private ConcurrentLinkedQueue<Pair<HFileScanner, ReentrantReadWriteLock>> scanners = new ConcurrentLinkedQueue<>();
     private Configuration conf;
-    private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
 
     public HFilesInput(boolean isOnHdfs, String path) throws IOException {
@@ -51,8 +51,10 @@ public class HFilesInput extends InputImpl<Cell> {
         logger().info("find {} matched file{} in directory: {}",
                 fileStatuses.size(), fileStatuses.size() <=1 ? "" : "s", fs.getFileStatus(p).getPath().toString());
         fileStatuses.forEach(s -> logger().info(s.getPath().toString()));
-        scanners = fileStatuses.stream().map(s ->
-                getScanner(s.getPath())).filter(Objects::nonNull).collect(Collectors.toList());
+        fileStatuses.stream().map(FileStatus::getPath).map(this::mapScanner).filter(Objects::nonNull).forEach(s -> {
+            ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
+            scanners.add(new Pair<>(s, lock));
+        });
         open();
     }
 
@@ -68,13 +70,13 @@ public class HFilesInput extends InputImpl<Cell> {
         return statusList;
     }
 
-    private HFileScanner getScanner(Path path) {
+    private HFileScanner mapScanner(Path path) {
         if (null != path) try {
             HFile.Reader reader = HFile.createReader(fs, path, new CacheConfig(conf), conf);
             reader.loadFileInfo();
-            HFileScanner scanner = reader.getScanner(false, true);
+            HFileScanner scanner = reader.getScanner(false, false);
             if (!scanner.seekTo()) {
-                logger().info("{} is empty, ignore this file.", path);
+                logger().debug("{} is empty, ignore this file.", path);
                 return null;
             }
             return scanner;
@@ -84,25 +86,41 @@ public class HFilesInput extends InputImpl<Cell> {
         return null;
     }
 
+    private static boolean scannerHasNext(HFileScanner scanner) {
+        try {
+            return scanner.next();
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
     @Override
     protected Cell dequeue() {
-        if (scanners.size() <= 0) return null;
-        HFileScanner scanner = scanners.get(0);
+        Cell cell = null;
+        Pair<HFileScanner, ReentrantReadWriteLock> pair = scanners.peek();
+        if (null == pair) return null;
+        HFileScanner scanner = pair.getFirst();
+        ReentrantReadWriteLock lock = pair.getSecond();
         if (lock.writeLock().tryLock()) {
-            try {
-                if (!scanner.next()) {
-                    scanners.remove(scanner);
-                    scanner = scanners.get(0);
-                    logger().info("process hfile: {}", scanner.getReader().getFileContext().getHFileName());
-                }
-            } catch (IOException e) {
-                lock.writeLock().unlock();
+            cell = scanner.getKeyValue();
+            if (!scannerHasNext(scanner)) {
+                scanners.remove(pair);
+//                scanners.poll();
             }
-            Cell cell = scanner.getKeyValue();
             lock.writeLock().unlock();
-            return cell;
         }
-        return null;
+        return cell;
+    }
+
+    /**
+     * mark the input is empty
+     * the pump will finish if return empty, otherwise waiting for new item coming
+     * @return if the input is empty
+     */
+    @Override
+    public boolean empty() {
+        // jstack pid TIMED_WAITING
+        return scanners.isEmpty();
     }
 
     @Override
