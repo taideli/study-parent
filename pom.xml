@@ -20,6 +20,7 @@
         <!--<module>study-netty</module>-->
         <module>study-scala</module>
         <module>study-spark</module>
+        <module>study-spring</module>
         <module>study-tools</module>
         <module>study-zk</module>
     </modules>
