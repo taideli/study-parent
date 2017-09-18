@@ -16,6 +16,7 @@
     <properties>
         <spring.boot.version>1.5.2.RELEASE</spring.boot.version>
         <aspectj.version>1.8.9</aspectj.version>
+        <commons-io.version>2.5</commons-io.version>
     </properties>
 
     <dependencyManagement>
@@ -61,6 +62,13 @@
             <version>${aspectj.version}</version>
         </dependency>
         <!--end of AOP for ch1.e3-->
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
