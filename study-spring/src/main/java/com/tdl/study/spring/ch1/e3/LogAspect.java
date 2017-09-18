@@ -1,4 +1,4 @@
-package com.tdl.study.spring.t3;
+package com.tdl.study.spring.ch1.e3;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
@@ -15,7 +15,7 @@ import java.lang.reflect.Method;
 @Component
 public class LogAspect {
 
-    @Pointcut("@annotation(com.tdl.study.spring.t3.Action)")
+    @Pointcut("@annotation(com.tdl.study.spring.ch1.e3.Action)")
     public void annotationPointCut() {}
 
     @After("annotationPointCut()")
@@ -26,7 +26,7 @@ public class LogAspect {
         System.out.println("注解式拦截 " + action.name());
     }
 
-    @Before("execution(* com.tdl.study.spring.t3.DemoMethodService.*(..))")
+    @Before("execution(* com.tdl.study.spring.ch1.e3.DemoMethodService.*(..))")
     public void before(JoinPoint joinPoint) {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();

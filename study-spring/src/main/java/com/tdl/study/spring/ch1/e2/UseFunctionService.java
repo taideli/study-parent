@@ -1,4 +1,4 @@
-package com.tdl.study.spring.t2;
+package com.tdl.study.spring.ch1.e2;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package com.tdl.study.spring.t2;
+package com.tdl.study.spring.ch1.e2;
 
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;

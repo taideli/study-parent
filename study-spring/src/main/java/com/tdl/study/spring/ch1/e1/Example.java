@@ -1,4 +1,4 @@
-package com.tdl.study.spring.t1;
+package com.tdl.study.spring.ch1.e1;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;

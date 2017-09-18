@@ -42,7 +42,7 @@
             <version>${spring.boot.version}</version>
         </dependency>
 
-        <!--start of AOP    t3-->
+        <!--start of AOP for ch1.e3-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
@@ -60,7 +60,7 @@
             <artifactId>aspectjweaver</artifactId>
             <version>${aspectj.version}</version>
         </dependency>
-        <!--end of AOP    t3-->
+        <!--end of AOP for ch1.e3-->
     </dependencies>
 
     <build>

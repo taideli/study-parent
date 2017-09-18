@@ -1,4 +1,4 @@
-package com.tdl.study.spring.t2;
+package com.tdl.study.spring.ch1.e2;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
