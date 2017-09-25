@@ -1,9 +1,11 @@
 package com.tdl.study.mongo.io;
 
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoClientURI;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.jndi.MongoClientFactory;
 import com.mongodb.client.model.*;
 import com.mongodb.client.result.UpdateResult;
 import com.tdl.study.core.io.output.BatchOutput;
@@ -24,23 +26,27 @@ public class MongoOutput extends BatchOutput<Document> {
 
     /**
      * press in data to mongo db
-     * @param mongoURI the standard uri to connect mongo, see {@link com.mongodb.MongoClientURI}
+     * @param mongoURI the uri to connect mongo, see {@link com.mongodb.MongoClientURI}
      * @param upsert true if a new document should be inserted if there are no field '_id' in the document
      */
     public MongoOutput(String mongoURI, boolean upsert) {
-        MongoClientURI uri = new MongoClientURI(mongoURI);
-        String dbName = uri.getDatabase();
-        String colName = uri.getCollection();
+        this(new MongoClientURI(mongoURI), upsert);
+    }
 
-        client = new MongoClient(uri);
+    /**
+     * press in data to mongo db
+     * @param mongoURI the uri to connect mongo, see {@link com.mongodb.MongoClientURI}
+     * @param upsert true if a new document should be inserted if there are no field '_id' in the document
+     */
+    public MongoOutput(MongoClientURI mongoURI, boolean upsert) {
+        String dbName = mongoURI.getDatabase();
+        String colName = mongoURI.getCollection();
+
+        client = new MongoClient(mongoURI);
         collection = client.getDatabase(dbName).getCollection(colName);
 
         updateOptions = new UpdateOptions().upsert(upsert);
         open();
-
-    }
-
-    public MongoOutput(List<ServerAddress> addrs, String user, String pwd, String db, String col) {
 
     }
 
