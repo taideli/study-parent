@@ -1,0 +1,13 @@
+[Unit]
+Description=zookeeper
+After=network.target remote-fs.target nss-lookup.target
+
+[Service]
+Type=forking
+ExecStart=/taidl/zookeeper/bin/zkServer.sh start
+ExecReload=/taidl/zookeeper/bin/zkServer.sh restart
+ExecStop=/taidl/zookeeper/bin/zkServer.sh stop
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
