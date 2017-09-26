@@ -1,13 +1,10 @@
 #!/bin/bash
 
-# touch profile.d/taidl.sh
-custom_profile=/etc/profile.d/taidl.sh
-if [ ! -f ${custom_profile} ]; then
-    cp ./common.sh /etc/profile.d/taidl.sh
-fi
+. ./common.sh
 
-. packages/componments.properties
-#check_if_componments_ready
+if [ ! -f ${CUSTOM_PROFILE} ]; then echo "#!/bin/bash" >> ${CUSTOM_PROFILE}; fi
+if [ ! -d ${INSTALL_HOME} ]; then mkdir ${INSTALL_HOME}; fi
 
+. ./componments.properties
 
 . ./install/java/install-jdk.sh

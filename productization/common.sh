@@ -1,5 +1,12 @@
 #!/bin/bash
 
-export BG_INSTALL_HOME=/taidl
-export BG_DATA_HOME=/taidl/data
-export BG_LOG_HOME=/var/log/taidl
+CLUSTER_NAME=pseudo
+INSTALL_HOME=/${CLUSTER_NAME}
+DATA_HOME=/${CLUSTER_NAME}/data
+LOG_HOME=/var/log/${CLUSTER_NAME}
+CUSTOM_PROFILE=/etc/profile.d/${CLUSTER_NAME}.sh
+
+function extract_name() {
+    name=`tar -tf $1 2>/dev/null | head -n 1 | sed 's/\/$//'`
+    echo ${name}
+}
