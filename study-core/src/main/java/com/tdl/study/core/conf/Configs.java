@@ -11,6 +11,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -27,11 +28,11 @@ public class Configs {
         String prefix() default "";
     }
 
-    public static Conf init() {
+    private static Conf init() {
         return init(Systems.getMainClass());
     }
 
-    public static Conf init(Class<?> clazz) {
+    private static Conf init(Class<?> clazz) {
         Config config = clazz.getAnnotation(Config.class);
 //        clazz.getAnnotations()
         return null != config ? init(clazz, config.value(), config.prefix()) : null;
@@ -41,15 +42,17 @@ public class Configs {
         Map<String, String> settings = new HashMap<>();
 
         /** 1. 加载系统属性 */
-        System.getProperties().forEach((k, v) -> settings.put(k.toString(), v.toString()));
+        fill(settings, Configs::systemPrefix, mapProp(System.getProperties()));
         /** 2. 加载配置文件属性*/
+        System.out.println("paths.get   " + Paths.get("").toAbsolutePath().toString());
         String extension = defaultConfFileExtension();
         if (!filename.endsWith(extension)) filename = filename + extension;
         // 优先级 -cp下 classpath下 当前目录下  要去重
 
-
         try (InputStream is = IOs.open(filename)) {
-            fill(settings, null, is);
+            if (!fill(settings, null, is)) try (InputStream cis = IOs.openInClasspath(clazz, filename)) {
+                fill(settings, null, cis);
+            }
         } catch (IOException ignored) {}
         // TODO: 2017/9/26 where to find the file
 //        throw new RuntimeException("Code not completed.");
@@ -58,16 +61,16 @@ public class Configs {
         return new Conf(prefix, settings);
     }
 
-    /**
-     * 优先级 -cp下 > jar中 > 当前目录下
-     * @param clazz
-     * @param filename
-     * @return
-     */
-    private static List<String> findFiles(Class<?> clazz, String filename) {
-        List<String> files = new ArrayList<>();
+    private static boolean systemPrefix(String key) {
+        List<String> systemKeyPrefix = Arrays.asList("sun", "awt", "java", "os", "file", "user", "path", "line");
+        for (String prefix : systemKeyPrefix) {
+            if (key.startsWith(prefix)) return true;
+        }
+        return false;
+    }
 
-        return files;
+    private static boolean validPrefix(String prefix, String key) {
+        return key.startsWith(prefix);
     }
 
     private static Map<String, String> mapProp(Properties properties) {
@@ -113,15 +116,7 @@ public class Configs {
         return get(key, (String[]) null);
     }
 
-    public static String get(String priority, String key) {
-        return get(priority, key, (String[]) null);
-    }
-
     public static String get(String key, String... defaults) {
-        return get(null, key, defaults);
-    }
-
-    public static String getd(String key, String... defaults) {
         return get(null, key, defaults);
     }
 
@@ -129,16 +124,16 @@ public class Configs {
         return get(priority, key, (String[]) null);
     }
 
-    public static String get(String priority, String key, String... defaults) {
+    private static String get(String priority, String key, String... defaults) {
         return config.get(priority, key, defaults);
     }
 
     public static final class Conf {
-        protected final Path file;
+        private final Path file;
         private final String prefix;
         private final Map<String, String> configs;
 
-        public Conf(String prefix, Map<String, String> configs) {
+        Conf(String prefix, Map<String, String> configs) {
            if (null == prefix || prefix.length() == 0) this.prefix = "";
            else {
                if (!prefix.endsWith(".")) prefix = prefix + ".";
@@ -150,26 +145,6 @@ public class Configs {
 
         String prefixedKey(String key) {
             return prefix + key;
-        }
-
-        public String get(String key) {
-            return get(key, (String[]) null);
-        }
-
-        public String get(String priority, String key) {
-            return get(priority, key, (String[]) null);
-        }
-
-        public String get(String key, String... defaults) {
-            return get(null, key, defaults);
-        }
-
-        public String getd(String key, String... defaults) {
-            return get(null, key, defaults);
-        }
-
-        public String getp(String priority, String key) {
-            return get(priority, key, (String[]) null);
         }
 
         public String get(String priority, String key, String... defaults) {
@@ -184,7 +159,7 @@ public class Configs {
             return null == defaults || defaults.length == 0 ? null : defaults[0];
         }
 
-        public boolean has(String key) {
+        boolean has(String key) {
             return configs.containsKey(prefixedKey(key));
         }
     }
