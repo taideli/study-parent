@@ -14,7 +14,8 @@ for idx in `seq 1 ${REPLICA_COUNT}`; do
 
   # config zookeeper
   ZK_CONF_DIR=${SRV_HOME}/conf
-  mv ${ZK_CONF_DIR}/zoo-simple.cfg ${ZK_CONF_DIR}/zoo.cfg
+  cp ./install/zk/zookeeper-env.sh ${ZK_CONF_DIR}
+  mv ${ZK_CONF_DIR}/zoo_sample.cfg ${ZK_CONF_DIR}/zoo.cfg
   ZK_DATA_DIR=${DATA_HOME}/zookeeper/data_${idx}
   mkdir -p ${ZK_DATA_DIR}
   echo "${idx}" > ${ZK_DATA_DIR}/myid
@@ -24,14 +25,15 @@ for idx in `seq 1 ${REPLICA_COUNT}`; do
   # #!/bin/bash
   # export ZOO_LOG_DIR=....
 
-  sed -i "s/^dataDir=*/dataDir=${ZK_DATA_DIR}" ${ZK_CONF_DIR}/zoo.cfg
+  # USE ANOTHER separator instead of '/' for 'sed'
+  sed -i "s|^dataDir=.*$|dataDir=${ZK_DATA_DIR}|" ${ZK_CONF_DIR}/zoo.cfg
   sed -i "/^dataDir=/a\\dataLogDir=${DATA_LOG_DIR}" ${ZK_CONF_DIR}/zoo.cfg
-
+  sed -i "s|^clientPort=.*$|clientPort=218${idx}|" ${ZK_CONF_DIR}/zoo.cfg
   for id in `seq 1 ${REPLICA_COUNT}`; do
       echo "server.${id}=0.0.0.0:288${id}:388${id}" >> ${ZK_CONF_DIR}/zoo.cfg
   done
-  sed -i "s/^zookeeper.log.dir=*/zookeeper.log.dir=${LOG_HOME}/zookeeper/server_${idx}" ${ZK_CONF_DIR}/log4j.properties
-  sed -i "s/^zookeeper.tracelog.dir=*/zookeeper.tracelog.dir=${LOG_HOME}/zookeeper/server_${idx}" ${ZK_CONF_DIR}/log4j.properties
+  sed -i "s|^zookeeper.log.dir=.*$|zookeeper.log.dir=${LOG_HOME}/zookeeper/server_${idx}|" ${ZK_CONF_DIR}/log4j.properties
+  sed -i "s|^zookeeper.tracelog.dir=.*$|zookeeper.tracelog.dir=${LOG_HOME}/zookeeper/server_${idx}|" ${ZK_CONF_DIR}/log4j.properties
 
 done
 

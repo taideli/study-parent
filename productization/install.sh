@@ -8,4 +8,5 @@ if [ ! -d `dirname ${INSTALL_LOG}` ]; then mkdir -p `dirname ${INSTALL_LOG}`; fi
 
 . ./componments.properties
 
-. ./install/java/install-jdk.sh
+#. ./install/java/install-jdk.sh
+ . ./install/zk/install-zk-pseudo-cluster.sh
