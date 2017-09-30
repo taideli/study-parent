@@ -12,6 +12,7 @@
     <modules>
         <module>study-core</module>
         <module>study-hbase</module>
+        <module>study-elasticsearch</module>
         <module>study-hadoop</module>
         <module>study-java</module>
         <!--<module>study-jetty</module>-->
