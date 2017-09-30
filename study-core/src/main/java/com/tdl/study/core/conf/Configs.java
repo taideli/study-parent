@@ -61,8 +61,8 @@ public class Configs {
         // 优先级 先从classPath下找，找不到则从jar包中找 再找不到从当前目录找
         try (InputStream cis = IOs.openInClasspath(clazz, filename)) {
             if (!fill(settings, null, cis)) try (InputStream dis = IOs.openInCurrentDir(filename)) {
-                if (!fill(settings, null, dis)) throw new FileNotFoundException("config file " + filename);
-                else System.out.println("load config from " + Paths.get("").toAbsolutePath().toString());
+                if (!fill(settings, null, dis)) throw new FileNotFoundException(filename);
+                else System.out.println("load from " + Paths.get("").toAbsolutePath().toString());
             } else System.out.println("load from classpath");
         } catch (IOException e) {
             throw new RuntimeException(e);

@@ -4,10 +4,9 @@ import com.tdl.study.core.conf.Configs;
 
 import static com.tdl.study.core.conf.Configs.Config;
 
-@Config(value = "xxx.properties", prefix = "conf.test")
+@Config(value = "test.properties", prefix = "conf.test")
 public class Test {
     public static void main(String[] args) {
-        System.out.println(Configs.get("abc"));
-        System.out.println("hello world");
+        Configs.map().forEach((k, v) -> System.out.println(k + " <====> " + v));
     }
 }
