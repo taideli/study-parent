@@ -4,6 +4,7 @@ import com.tdl.study.core.utils.IOs;
 import com.tdl.study.core.utils.Systems;
 import com.tdl.study.core.utils.Texts;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.ElementType;
@@ -17,15 +18,26 @@ import java.util.function.Predicate;
 
 public class Configs {
 
+//    private static final Logger log = Logger.getLogger(Configs.class);
     private static final Conf config = init();
     private static final String SYSTEM_CONFIG_FILE_EXTENSION = "com.tdl.study.core.conf.extension";
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.TYPE)
     public @interface Config {
+        /**
+         * the name of the config file
+         */
         String value() default "";
 
+        /**
+         * prefix of valid config fields
+         */
         String prefix() default "";
+
+        boolean ignoreInvalidFields() default false;
+
+        boolean ignoreSystemFields() default false;
     }
 
     private static Conf init() {
@@ -34,7 +46,6 @@ public class Configs {
 
     private static Conf init(Class<?> clazz) {
         Config config = clazz.getAnnotation(Config.class);
-//        clazz.getAnnotations()
         return null != config ? init(clazz, config.value(), config.prefix()) : null;
     }
 
@@ -44,20 +55,18 @@ public class Configs {
         /** 1. 加载系统属性 */
         fill(settings, Configs::systemPrefix, mapProp(System.getProperties()));
         /** 2. 加载配置文件属性*/
-        System.out.println("paths.get   " + Paths.get("").toAbsolutePath().toString());
+//        String path = clazz.getProtectionDomain().getCodeSource().getLocation().getPath();
         String extension = defaultConfFileExtension();
         if (!filename.endsWith(extension)) filename = filename + extension;
-        // 优先级 -cp下 classpath下 当前目录下  要去重
-
-        try (InputStream is = IOs.open(filename)) {
-            if (!fill(settings, null, is)) try (InputStream cis = IOs.openInClasspath(clazz, filename)) {
-                fill(settings, null, cis);
-            }
-        } catch (IOException ignored) {}
-        // TODO: 2017/9/26 where to find the file
-//        throw new RuntimeException("Code not completed.");
-//        System.out.println("====filename:" + filename);
-//        String file = "";
+        // 优先级 先从classPath下找，找不到则从jar包中找 再找不到从当前目录找
+        try (InputStream cis = IOs.openInClasspath(clazz, filename)) {
+            if (!fill(settings, null, cis)) try (InputStream dis = IOs.openInCurrentDir(filename)) {
+                if (!fill(settings, null, dis)) throw new FileNotFoundException("config file " + filename);
+                else System.out.println("load config from " + Paths.get("").toAbsolutePath().toString());
+            } else System.out.println("load from classpath");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         return new Conf(prefix, settings);
     }
 
@@ -134,13 +143,13 @@ public class Configs {
         private final Map<String, String> configs;
 
         Conf(String prefix, Map<String, String> configs) {
-           if (null == prefix || prefix.length() == 0) this.prefix = "";
-           else {
-               if (!prefix.endsWith(".")) prefix = prefix + ".";
-               this.prefix = prefix;
-           }
-           this.file = null;
-           this.configs = configs;
+            if (null == prefix || prefix.length() == 0) this.prefix = "";
+            else {
+                if (!prefix.endsWith(".")) prefix = prefix + ".";
+                this.prefix = prefix;
+            }
+            this.file = null;
+            this.configs = configs;
         }
 
         String prefixedKey(String key) {
