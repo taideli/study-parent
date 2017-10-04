@@ -22,3 +22,10 @@ vim /etc/sysctl.conf
 
 一份教程
 http://blog.csdn.net/cnweike/article/details/33736429
+
+percolate-query
+https://www.elastic.co/guide/en/elasticsearch/client/java-api/current/java-specialized-queries.html#java-query-percolate-query
+https://www.elastic.co/guide/en/elasticsearch/reference/5.6/query-dsl-percolate-query.html
+
+官方 权威指南
+https://www.elastic.co/guide/cn/elasticsearch/guide/current/intro.html
