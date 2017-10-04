@@ -21,11 +21,13 @@ public class ProfilesApp {
     }
 }
 
-/** 上面的配置不生效的，配置文件查找路径如下：
-profile的配置文件可以按照application.properies的放置位置一样，放于以下四个位置，
+/** 这三个文件放在根目录下可以*/
 
-    当前目录的 “/config”的子目录下
-    当前目录下
-    classpath根目录的“/config”包下
-    classpath的根目录下
+/** 上面的配置不生效的，配置文件查找路径如下：
+* profile的配置文件可以按照application.properies的放置位置一样，放于以下四个位置，
+*
+*   当前目录的 “/config”的子目录下
+*   当前目录下
+*   classpath根目录的“/config”包下
+*   classpath的根目录下
 */
