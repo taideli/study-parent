@@ -32,6 +32,7 @@ https://www.elastic.co/guide/en/elasticsearch/reference/5.6/query-dsl-percolate-
 
 官方 权威指南
 https://www.elastic.co/guide/cn/elasticsearch/guide/current/intro.html
+https://www.gitbook.com/book/looly/elasticsearch-the-definitive-guide-cn/details
 
 
 ### 基本操作
@@ -313,27 +314,48 @@ curl -XPOST '192.168.1.104:9201/bank/_search?pretty' -d '{"query":{"match_all":{
 
 
 ### percolator query
-1. 为 message 字段创建一个带有mapping映射、名为my-index的索引
+1. 为 message 字段创建一个带有mapping映射、名为my-index的索引<br/>
 curl -XPUT '192.168.1.104:9201/my-index' -d '{"mappings":{"my-type":{"properties":{"message":{"type":"string"}}}}}'
-响应：
+响应：<br/>
 {"acknowledged":true}
 
-2. 在percolator中注册一个查询
+2. 在percolator中注册一个查询<br/>
 curl -XPUT '192.168.1.104:9201/my-index/.percolator/1' -d '{"query":{"match":{"message":"bonsai tree"}}}'
-响应：
+<br/>响应：<br/>
 {"_index":"my-index","_type":".percolator","_id":"1","_version":1,"_shards":{"total":2,"successful":2,"failed":0},"created":true}
 
-3. 若插入一个匹配的doc
+3. 若插入一个匹配的doc<br/>
  curl -XGET '192.168.1.104:9201/my-index/my-type/_percolate' -d '{"doc":{"message":"A new bonsai tree in the office"}}'
- 响应：matches字段表明匹配到了哪些查询
+ <br/>响应：matches字段表明匹配到了哪些查询<br/>
 {"took":11,"_shards":{"total":5,"successful":5,"failed":0},"total":1,"matches":[{"_index":"my-index","_id":"1"}]}
 
-4. 若插入一个为匹配的doc
+4. 若插入一个为匹配的doc<br/>
 curl -XGET '192.168.1.104:9201/my-index/my-type/_percolate' -d '{"doc":{"message":"A new bonsaddi tddree in the office"}}'
-响应： 没有匹配的查询，matches字段为空
+<br/>响应： 没有匹配的查询，matches字段为空<br/>
 {"took":10,"_shards":{"total":5,"successful":5,"failed":0},"total":0,"matches":[]}
 
-5. 可以看到用的是GET方法，文档并不会被储存，只是会返回percolate的结果，匹配多个的话matches会包含多条匹配的结果
+5. 可以看到用的是GET方法，文档并不会被储存，只是会返回percolate的结果，匹配多个的话matches会包含多条匹配的结果<br/>
+
+6. Percolate queries are stored as documents in a specific format and in an arbitrary index under a reserved type with the name .percolator. The query itself is placed as is in a JSON object under the top level field query.
+ <br/>Percolate查询以一种特殊的格式作为一个文档存储在任意一种索引下的保留类型'.percolate'类型中;查询条件本身是以JSON格式放在顶层的query字段中
+
+7. 删除一个percolate查询<br/>
+[es@taidl104 ~]$ curl -XDELETE '192.168.1.104:9201/my-index/.percolator/3?pretty'
+
+8. 只返回匹配的查询的个数，不包含具体内容<br/>
+[es@taidl104 ~]$ curl -XGET '192.168.1.104:9201/my-index/my-type/_percolate/count?pretty' -d '{"doc":{"message":"A new bonsai tree in the office"}}'
+{
+  "took" : 7,
+  "_shards" : {
+    "total" : 5,
+    "successful" : 5,
+    "failed" : 0
+  },
+  "total" : 2
+}
+
+9. 2.x版本文档
+https://www.elastic.co/guide/en/elasticsearch/reference/2.4/search-percolate.html#search-percolate
 
 ```json
 {
