@@ -313,8 +313,8 @@ curl -XPOST '192.168.1.104:9201/bank/_search?pretty' -d '{"query":{"match_all":{
 '
 
 
-### percolator query
-1. 为 message 字段创建一个带有mapping映射、名为my-index的索引<br/>
+### percolator query (趴克累特)
+1. 为 my-type的message 字段创建一个带有mapping映射、名为my-index的索引<br/>
 curl -XPUT '192.168.1.104:9201/my-index' -d '{"mappings":{"my-type":{"properties":{"message":{"type":"string"}}}}}'
 响应：<br/>
 {"acknowledged":true}
@@ -354,7 +354,190 @@ curl -XGET '192.168.1.104:9201/my-index/my-type/_percolate' -d '{"doc":{"message
   "total" : 2
 }
 
-9. 2.x版本文档
+9. 对已存在的文档执行percolate query<br/>
+[root@pseudo kibana]# curl -XPUT '172.16.17.203:39200/tdl_percolate_test/type_1/doc1?pretty' -d '{"field_11":"elastic search percolate doc"}'
+{
+  "_index" : "tdl_percolate_test",
+  "_type" : "type_1",
+  "_id" : "doc1",
+  "_version" : 1,
+  "_shards" : {
+    "total" : 2,
+    "successful" : 1,
+    "failed" : 0
+  },
+  "created" : true
+}
+[root@pseudo kibana]# curl -XPUT '172.16.17.203:39200/tdl_percolate_test/type_1/doc2?pretty' -d '{"field_11":"elasticsearch is a good search engine"}'
+{
+  "_index" : "tdl_percolate_test",
+  "_type" : "type_1",
+  "_id" : "doc2",
+  "_version" : 1,
+  "_shards" : {
+    "total" : 2,
+    "successful" : 1,
+    "failed" : 0
+  },
+  "created" : true
+}
+[root@pseudo kibana]# curl -XPUT '172.16.17.203:39200/tdl_percolate_test/type_1/doc2?pretty' -d '{"field_11":"elasticsearch is a good search engine, key: keyword_11"}'
+{
+  "_index" : "tdl_percolate_test",
+  "_type" : "type_1",
+  "_id" : "doc2",
+  "_version" : 2,
+  "_shards" : {
+    "total" : 2,
+    "successful" : 1,
+    "failed" : 0
+  },
+  "created" : false
+}
+[root@pseudo kibana]# curl -XPUT '172.16.17.203:39200/tdl_percolate_test/type_1/doc1?pretty' -d '{"field_12":"a doc with keyword_12"}'
+{
+  "_index" : "tdl_percolate_test",
+  "_type" : "type_1",
+  "_id" : "doc1",
+  "_version" : 2,
+  "_shards" : {
+    "total" : 2,
+    "successful" : 1,
+    "failed" : 0
+  },
+  "created" : false
+}
+[root@pseudo kibana]# curl -XPUT '172.16.17.203:39200/tdl_percolate_test/type_1/doc1?pretty' -d '{"field_11":"elastic search percolate doc"}'
+{
+  "_index" : "tdl_percolate_test",
+  "_type" : "type_1",
+  "_id" : "doc1",
+  "_version" : 3,
+  "_shards" : {
+    "total" : 2,
+    "successful" : 1,
+    "failed" : 0
+  },
+  "created" : false
+}
+[root@pseudo kibana]# curl -XPUT '172.16.17.203:39200/tdl_percolate_test/type_1/doc3?pretty' -d '{"field_12":"a doc with keyword_12"}'
+{
+  "_index" : "tdl_percolate_test",
+  "_type" : "type_1",
+  "_id" : "doc3",
+  "_version" : 1,
+  "_shards" : {
+    "total" : 2,
+    "successful" : 1,
+    "failed" : 0
+  },
+  "created" : true
+}
+[root@pseudo kibana]# 
+[root@pseudo kibana]# 
+[root@pseudo kibana]# curl -XPUT '172.16.17.203:39200/tdl_percolate_test/type_2/doc3?pretty' -d '{"field_22":"a doc in type_2 with keyword_22"}'
+{
+  "_index" : "tdl_percolate_test",
+  "_type" : "type_2",
+  "_id" : "doc3",
+  "_version" : 1,
+  "_shards" : {
+    "total" : 2,
+    "successful" : 1,
+    "failed" : 0
+  },
+  "created" : true
+}
+[root@pseudo kibana]# curl -XPUT '172.16.17.203:39200/tdl_percolate_test/type_2/doc4?pretty' -d '{"field_21":"a doc in type_2 with keyword_21"}'
+{
+  "_index" : "tdl_percolate_test",
+  "_type" : "type_2",
+  "_id" : "doc4",
+  "_version" : 1,
+  "_shards" : {
+    "total" : 2,
+    "successful" : 1,
+    "failed" : 0
+  },
+  "created" : true
+}
+[root@pseudo kibana]# 
+[root@pseudo kibana]# 
+[root@pseudo kibana]# curl -XGET '172.16.17.203:39200/tdl_percolate_test/type_2/doc4/_percolate?pretty'
+{
+  "took" : 407,
+  "_shards" : {
+    "total" : 5,
+    "successful" : 5,
+    "failed" : 0
+  },
+  "total" : 1,
+  "matches" : [ {
+    "_index" : "tdl_percolate_test",
+    "_id" : "21"
+  } ]
+}
+[root@pseudo kibana]# 
+[root@pseudo kibana]# 
+[root@pseudo kibana]# 
+[root@pseudo kibana]# 
+[root@pseudo kibana]# curl -XGET '172.16.17.203:39200/tdl_percolate_test/type_2/doc1/_percolate?pretty'
+{
+  "error" : {
+    "root_cause" : [ {
+      "type" : "document_missing_exception",
+      "reason" : "[type_2][doc1]: document missing"
+    } ],
+    "type" : "document_missing_exception",
+    "reason" : "[type_2][doc1]: document missing"
+  },
+  "status" : 404
+}
+[root@pseudo kibana]# curl -XGET '172.16.17.203:39200/tdl_percolate_test/type_1/doc1/_percolate?pretty'
+{
+  "took" : 52,
+  "_shards" : {
+    "total" : 5,
+    "successful" : 5,
+    "failed" : 0
+  },
+  "total" : 0,
+  "matches" : [ ]
+}
+[root@pseudo kibana]# curl -XGET '172.16.17.203:39200/tdl_percolate_test/type_2/doc1/_percolate?pretty'
+{
+  "error" : {
+    "root_cause" : [ {
+      "type" : "document_missing_exception",
+      "reason" : "[type_2][doc1]: document missing"
+    } ],
+    "type" : "document_missing_exception",
+    "reason" : "[type_2][doc1]: document missing"
+  },
+  "status" : 404
+}
+[root@pseudo kibana]# curl -XGET '172.16.17.203:39200/tdl_percolate_test/type_1/doc2/_percolate?pretty'
+{
+  "took" : 36,
+  "_shards" : {
+    "total" : 5,
+    "successful" : 5,
+    "failed" : 0
+  },
+  "total" : 2,
+  "matches" : [ {
+    "_index" : "tdl_percolate_test",
+    "_id" : "13"
+  }, {
+    "_index" : "tdl_percolate_test",
+    "_id" : "11"
+  } ]
+}
+[root@pseudo kibana]# 
+
+
+
+2.x版本文档
 https://www.elastic.co/guide/en/elasticsearch/reference/2.4/search-percolate.html#search-percolate
 
 ```json
@@ -370,3 +553,4 @@ https://www.elastic.co/guide/en/elasticsearch/reference/2.4/search-percolate.htm
     }
   }
 ```
+
