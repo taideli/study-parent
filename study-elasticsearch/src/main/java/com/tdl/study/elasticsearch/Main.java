@@ -1,4 +1,5 @@
 package com.tdl.study.elasticsearch;
+/*
 
 import org.elasticsearch.action.percolate.PercolateResponse;
 import org.elasticsearch.client.transport.TransportClient;
@@ -13,24 +14,10 @@ import java.net.InetAddress;
 
 import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 import static org.elasticsearch.index.query.QueryBuilders.termQuery;
+*/
 
 public class Main {
-    /*
-
-    curl -XPUT '192.168.1.104:9201/percolate' -d '{
-        "mappings": {
-          "my_type": {
-            "properties":{
-              "message":{
-               "type":"string"
-              }
-             }
-           }
-
-          }
-        }'
-
-    */
+/*
     public static void main(String[] args) throws IOException {
         String indexName = "percolate";
         String indexType = "message";
@@ -84,5 +71,20 @@ public class Main {
 
         client.close();
     }
-
+    */
 }
+
+    /*
+    curl -XPUT '192.168.1.104:9201/percolate' -d '{
+        "mappings": {
+          "my_type": {
+            "properties":{
+              "message":{
+               "type":"string"
+              }
+             }
+           }
+
+          }
+        }'
+    */
