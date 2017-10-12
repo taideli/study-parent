@@ -5,15 +5,15 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ConfiguratoinProperties {
+@Target(ElementType.FIELD)
+public @interface ConfigureKey {
+
+    /**
+     * if is default value, get field name as key
+     * @return
+     */
     String value() default "";
 
-    String prifix() default "";
-
-    boolean ignoreInvalidFields() default false;
-
-
-    // TODO: 2017/9/30 参照spring boot同名类实现
+    Class<?> type() default Object.class;
 }
