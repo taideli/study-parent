@@ -1,4 +1,149 @@
-term 精确查询
 
-组合过滤器
-布尔过滤器
+PUT _xpack/watcher/watch/log_error_watch
+{
+  "trigger": {
+    "schedule": {
+      "interval": "30s"
+    }
+  },
+  "input": {
+    "search": {
+      "request": {
+        "indices": ["logs"],
+        "body": {
+          "query": {
+            "match": {
+              "message": "error"
+            }
+          }
+        }
+      }
+    }
+  },
+  "condition": {
+    "compare": {
+      "ctx.payload.hits.total": {
+        "gt": 0
+      }
+    }
+  },
+  "actions": {
+    "log_error": {
+      "logging": {
+        "level": "error",
+        "text": "Found {{ctx.payload.hits.total}} error(s) in the index [logs] by {{ctx.watch_id}}."
+      }
+    }
+  }
+}
+
+PUT _xpack/watcher/watch/tdl_query_match_watcher
+{
+  "trigger": {
+    "schedule": {
+      "interval": "30s"
+    }
+  },
+  "input": {
+    "search": {
+      "request": {
+        "indices": ["logs"],
+        "body": {
+          "query": {
+            "match": {
+              "message": "error"
+            }
+          }
+        }
+      }
+    }
+  },
+  "condition": {
+    "compare": {
+      "ctx.payload.hits.total": {
+        "gt": 0
+      }
+    }
+  },
+  "actions": {
+    "index_payload": {
+      "index": {
+        "index": "tdl_watcher_result_index",
+        "doc_type": "tdl_watcher_result_type"
+      }
+    }
+  }
+}
+
+GET /tdl_watcher_result_index/tdl_watcher_result_type/_search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+# a document that matches
+POST logs/event
+{
+  "timestamp": "2017-10-13T16:54:05.777Z",
+  "request": "GET index.html",
+  "status_code": 404,
+  "message": "Error: File not fount of new"
+}
+
+GET .watcher-history*/_search?pretty
+{
+  "sort": [
+    {
+      "result.execution_time": "desc"
+    }
+  ]
+}
+
+GET .watcher-history*/_search?pretty
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match": {
+            "result.condition.met": true
+          }
+        },
+        {
+          "range": {
+            "result.execution_time": {
+              "from": "now-10s"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+GET /logs/event/_search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+GET /_cat/indices
+
+
+
+GET _xpack/_search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+
+
+
+
+
+
+
