@@ -1,0 +1,278 @@
+# 5.2.0 percolate query
+
+GET _cluster/health
+
+GET _cat/indices
+
+# 1. create an index with two mappings
+PUT /tdl_test_index
+{
+  "mappings": {
+    "type_4_percolate": {
+      "properties": {
+        "CONTENT_txt": {
+          "type": "text"
+        }
+      }
+    },
+    "queries": {
+     "properties": {
+       "query": {
+          "type": "percolator"
+        }
+      }
+    }
+  }
+}
+
+# 2. register a query in the percolator
+PUT tdl_test_index/queries/1?refresh
+{
+  "query": {
+    "match": {
+      "CONTENT_txt": "bonsai tree"
+    }
+  }
+}
+
+# 3. match a document to the registered percolator queries
+GET /tdl_test_index/_search
+{
+  "query": {
+    "percolate": {
+      "field": "query",
+      "document_type": "type_4_percolate",
+      "document": {
+        "CONTENT_txt": "A new bonsai tree in the office"
+      }
+    }
+  }
+}
+# 3.1 non match a document to the registered ..queries
+GET /tdl_test_index/_search
+{
+  "query": {
+    "percolate": {
+      "field": "query",
+      "document_type": "type_4_percolate",
+      "document": {
+        "CONTENT_txt": "field document is the source of the document beging percolated"
+      }
+    }
+  }
+}
+
+# 4. percolaing an existing document
+# 4.1 index the document we want to percolate
+PUT /tdl_test_index/type_4_percolate/1
+{
+  "CONTENT_txt": "an existing document with bonsai tree in the office"
+}
+# 4.2 percolating an existing document, using the index response as basis to build to new search request, # field version is optional
+GET /tdl_test_index/_search
+{
+  "query": {
+    "percolate": {
+      "field": "query",
+      "document_type": "type_4_percolate",
+      "index": "tdl_test_index",
+      "type": "type_4_percolate",
+      "id": "1",
+      "version": 1
+    }
+  }
+}
+
+
+# 5 percolate query and hightligting
+# 5.1 save a query
+PUT /tdl_test_index/queries/2?refresh
+{
+  "query": {
+    "match": {
+      "CONTENT_txt": "brown fox"
+    }
+  }
+}
+# 5.2 save another query
+PUT /tdl_test_index/queries/3?refresh
+{
+  "query": {
+    "match": {
+      "CONTENT_txt": "lazy dog"
+    }
+  }
+}
+# 5.3
+GET /tdl_test_index/_search
+{
+  "query": {
+    "percolate": {
+      "field": "query",
+      "document_type": "type_4_percolate",
+      "document": {
+        "CONTENT_txt": "The quick brown fox jumps over the lazy dog"
+      }
+    }
+  },
+  "highlight": {
+    "fields": {
+      "CONTENT_txt": {}
+    }
+  }
+}
+
+GET /_search
+{
+  "query": {
+    "term": {
+      "query.extraction_result": "failed"
+    }
+  }
+}
+
+
+# =========================================================
+PUT /tdl_test_index/type_4_percolate/999
+{
+  "CONTENT_txt": "good morning",
+  "title": "unknown"
+}
+GET /tdl_test_index/type_4_percolate/_search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+DELETE /tdl_test_index/type_4_percolate/998
+
+
+# ==================================================
+PUT /tdl_test_index_store
+{
+  "mappings": {
+    "products": {
+      "properties": {
+        "productID": {
+          "type": "string",
+          "index": "not_analyzed"
+        }
+      }
+    }
+  }
+}
+
+POST /tdl_test_index_store/products/_bulk
+{"index": {"_id": 1}}
+{"price": 10, "productID": "XHDK-A-1293-#fJ3"}
+{"index": {"_id": 2}}
+{"price": 20, "productID": "KDKE-B-9947-#kL5"}
+{"index": {"_id": 3}}
+{"price": 30, "productID": "JODL-X-1937-#pV7"}
+{"index": {"_id": 4}}
+{"price": 30, "productID": "QQPX-R-3956-#aD8"}
+
+GET /tdl_test_index_store/products/_search
+{
+  "query": {
+    "constant_score": {
+      "filter": {
+        "term": {
+          "price": 20
+        }
+      }
+    }
+  }
+}
+
+GET /tdl_test_index_store/products/_search
+{
+  "query": {
+    "constant_score": {
+      "filter": {
+        "term": {
+          "productID": "XHDK-A-1293-#fJ3"
+        }
+      }
+    }
+  }
+}
+
+# wrong example, use next
+GET /tdl_test_index_store/products/_search
+{
+  "query": {
+    "filtered": {
+      "filter": {
+        "bool": {
+          "should": [
+            {"term": {"price": 20}},
+            {"term": {"productID": "XHDK-A-1293-#fJ3"}}
+          ],
+          "must_not": {
+            "term": {"price": 30}
+          }
+        }
+      }
+    }
+  }
+}
+
+# SELECT product FROM products WHERE  (price = 20 OR productID = "XHDK-A-1293-#fJ3") AND  (price != 30)
+GET /tdl_test_index_store/products/_search
+{
+  "query": {
+    "bool": {
+      "filter": {
+        "bool": {
+          "should": [
+            {"term": {"price": 20}},
+            {"term": {"productID": "XHDK-A-1293-#fJ3"}}
+          ],
+          "must_not": {
+            "term": {"price": 30}
+          }
+        }
+      }
+    }
+  }
+}
+
+
+# SELECT document FROM products WHERE productID = "KDKE-B-9947-#kL5" OR ( productID = "JODL-X-1937-#pV7" AND price = 30 )
+GET /tdl_test_index_store/products/_search
+{
+  "query": {
+    "bool": {
+      "filter": {
+        "bool": {
+          "should": [
+            {"term": {"productID": "KDKE-B-9947-#kL5"}},
+            {
+              "bool": {
+                "must": [
+                  {"term": {"productID": "JODL-X-1937-#pV7"}},
+                  {"term": {"price": 30}}
+                ]
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
