@@ -1,14 +1,22 @@
 package com.tdl.study.elasticsearch.xpack;
 
 import jdk.nashorn.internal.parser.JSONParser;
+import org.elasticsearch.action.ActionListener;
+import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequest;
+import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchType;
+import org.elasticsearch.action.support.IndicesOptions;
 import org.elasticsearch.client.Requests;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.bytes.BytesArray;
 import org.elasticsearch.common.bytes.BytesReference;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
+import org.elasticsearch.common.xcontent.XContentBuilder;
+import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.index.query.AbstractQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.script.Script;
 import org.elasticsearch.xpack.XPackClient;
 import org.elasticsearch.xpack.client.PreBuiltXPackTransportClient;
@@ -40,6 +48,7 @@ import org.elasticsearch.xpack.watcher.watch.WatchStatus;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,142 +76,90 @@ public class XPackMain {
 //        ).addTransportAddresses(
         ).addTransportAddress(
                 new InetSocketTransportAddress(
-                        new InetSocketAddress("172.16.16.232", 9300) // notes by taidl@2017/10/13_17:16 must 9300
+//                        new InetSocketAddress("172.16.16.232", 9300) // notes by taidl@2017/10/13_17:16 must 9300
+                        new InetSocketAddress("192.168.1.104", 9300) // notes by taidl@2017/10/13_17:16 must 9300
                 )
         );
 
         XPackClient xpackClient = new XPackClient(client);
         WatcherClient watcherClient = xpackClient.watcher();
 
+        client.admin().cluster().health(new ClusterHealthRequest(), new ActionListener<ClusterHealthResponse>() {
+            @Override
+            public void onResponse(ClusterHealthResponse clusterHealthResponse) {
+                System.out.println(clusterHealthResponse.toString());
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        });
 
 //        putWatch(watcherClient, "tdl_watcher_java", indices, types);
 //        deleteWatch(watcherClient, "tdl_watcher_java");
 
-        print();
-
-       client.close();
+            print();
+        client.close();
         System.out.println("finished and close");
     }
 
     public static void print() {
-        try {
-            WatchSourceBuilder watchSourceBuilder = WatchSourceBuilders.watchBuilder();
-            watchSourceBuilder.trigger(TriggerBuilders.schedule(Schedules.cron("0 0/1 * * * ?")));
-            // Create the search request to use for the input
-            SearchRequest request = Requests.searchRequest("idx").source(searchSource()
-                    .query(boolQuery()
-                            .must(matchQuery("response", 404))
-                            .filter(rangeQuery("date").gt("{{ctx.trigger.scheduled_time}}"))
-                            .filter(rangeQuery("date").lt("{{ctx.execution_time}}"))
-                    ));
-
-            // Create the search input
-            SearchInput input = new SearchInput(new WatcherSearchTemplateRequest(new String[]{"idx"}, null, SearchType.DEFAULT,
-                    WatcherSearchTemplateRequest.DEFAULT_INDICES_OPTIONS, new BytesArray(request.source().toString())), null, null, null);
-
-            // Set the input
-            watchSourceBuilder.input(input);
-
-            // Set the condition
-            watchSourceBuilder.condition(new ScriptCondition(new Script("ctx.payload.hits.total > 1")));
-
-            // Create the email template to use for the action
-            EmailTemplate.Builder emailBuilder = EmailTemplate.builder();
-            emailBuilder.to("someone@domain.host.com");
-            emailBuilder.subject("404 recently encountered");
-            EmailAction.Builder emailActionBuilder = EmailAction.builder(emailBuilder.build());
-
-            // Add the action
-            watchSourceBuilder.addAction("email_someone", emailActionBuilder);
-
-            BytesReference reference = watchSourceBuilder.build().getBytes();
-            String json = new String(BytesReference.toBytes(reference));
-            System.out.println(json);
-
-
-
-            XContentSource source = watchBuilder()
-//                        .trigger(schedule(cron("0 0/1 * * * ?")))
-                    .trigger(schedule(interval("10s")))
-                    .input(searchInput(new WatcherSearchTemplateRequest(new String[] {"logs"}, null, SearchType.DEFAULT,
-//                            WatcherSearchTemplateRequest.DEFAULT_INDICES_OPTIONS, searchSource().query(
-                            WatcherSearchTemplateRequest.DEFAULT_INDICES_OPTIONS, searchSource().query(
-//                            matchQuery("message", "error")
-                                    boolQuery().must(matchQuery("message", "error"))
-                                    .filter(rangeQuery("date").gt("{{ctx.trigger.scheduled_time}}"))
-                                    .filter(rangeQuery("date").lt("{{ctx.execution_time}}"))
-                    ).buildAsBytes())))
-                    .condition(new CompareCondition("ctx.payload.hits.total", CompareCondition.Op.GT, 1L))
-                    /*.addAction("email_someone", emailAction(EmailTemplate.builder()
-                            .to("1007811421@domain.host.com")
-                            .subject("404 recently encountered")
-                            .textBody("404 occur")
-                    ))*/
-                    .addAction("tdl_into_es_action",
-                            indexAction("tdl_alert_match_index_java", "tdl_alert_match_type_java")
-    //                                        .setExecutionTimeField("????")
-                    ).build();
-
-            BytesReference bytes = source.getBytes();
-            String jsonstr = new String(BytesReference.toBytes(bytes));
-            System.out.println(jsonstr);
-        } catch (IOException e) {
-            System.out.println("meet some error...........................\n");
-            e.printStackTrace();
-            System.out.println(".............................................");
-        }
     }
 
-    /** 用法
+
+    /**
+     * 用法
      * Use TriggerBuilders and Schedules classes to define the trigger
      * Use InputBuilders class to define the input
      * Use ConditionBuilders class to define the condition
      * Use ActionBuilders to define the actions
-     *
+     * <p>
      * 不美观的版本
      */
     public void putWatchUnaesthetic(WatcherClient watcherClient, String watchId, String[] indices, String[] types) {
-     WatchSourceBuilder wsBuilder = watchBuilder();
-            // set the trigger
-            wsBuilder.trigger(schedule(cron("0 0/1 * * * ?")));
+        WatchSourceBuilder wsBuilder = watchBuilder();
+        // set the trigger
+        wsBuilder.trigger(schedule(cron("0 0/1 * * * ?")));
 
-            // create the search request to use for the input
-            SearchRequest request = Requests.searchRequest(indices).source(
-                    searchSource().query(boolQuery()
-                            .must(matchQuery("response", 404))
-                            .filter(rangeQuery("date").gt("{{ctx.trigger.scheduled_time}}"))
-                            .filter(rangeQuery("date").lt("{{ctx.execution_time}}"))
-                    )
-            );
+        // create the search request to use for the input
+        SearchRequest request = Requests.searchRequest(indices).source(
+                searchSource().query(boolQuery()
+                        .must(matchQuery("response", 404))
+                        .filter(rangeQuery("date").gt("{{ctx.trigger.scheduled_time}}"))
+                        .filter(rangeQuery("date").lt("{{ctx.execution_time}}"))
+                )
+        );
 
-            // create the search input
-            SearchInput sInput = new SearchInput(new WatcherSearchTemplateRequest(indices, types, SearchType.DEFAULT,
-                    WatcherSearchTemplateRequest.DEFAULT_INDICES_OPTIONS, new BytesArray(request.source().toString())), null, null, null);
-            // set the input
-            wsBuilder.input(sInput);
+        // create the search input
+        SearchInput sInput = new SearchInput(new WatcherSearchTemplateRequest(indices, types, SearchType.DEFAULT,
+                WatcherSearchTemplateRequest.DEFAULT_INDICES_OPTIONS, new BytesArray(request.source().toString())), null, null, null);
+        // set the input
+        wsBuilder.input(sInput);
 
-            // set the condition
-            wsBuilder.condition(new ScriptCondition(new Script("ctx.payload.hits.total > 1")));
+        // set the condition
+        wsBuilder.condition(new ScriptCondition(new Script("ctx.payload.hits.total > 1")));
 
-            // create the email template to use for the action
-            EmailTemplate.Builder emailBuilder = EmailTemplate.builder();
-            emailBuilder.to("1007811421@domain.host.com");
-            emailBuilder.subject("404 recently encountered");
-            EmailAction.Builder emailActionBuilder = EmailAction.builder(emailBuilder.build());
-            // add the action
-            wsBuilder.addAction("email_someone", emailActionBuilder);
+        // create the email template to use for the action
+        EmailTemplate.Builder emailBuilder = EmailTemplate.builder();
+        emailBuilder.to("1007811421@domain.host.com");
+        emailBuilder.subject("404 recently encountered");
+        EmailAction.Builder emailActionBuilder = EmailAction.builder(emailBuilder.build());
+        // add the action
+        wsBuilder.addAction("email_someone", emailActionBuilder);
 
-            PutWatchResponse putWatchResponse = watcherClient.preparePutWatch("my-watch")
-                    .setSource(wsBuilder).get();
+        PutWatchResponse putWatchResponse = watcherClient.preparePutWatch("my-watch")
+                .setSource(wsBuilder).get();
     }
 
 
-    /** 用法
+    /**
+     * 用法
      * Use TriggerBuilders and Schedules classes to define the trigger
      * Use InputBuilders class to define the input
      * Use ConditionBuilders class to define the condition
      * Use ActionBuilders to define the actions
-     *
+     * <p>
      * 简洁版
      */
     public static void putWatch(WatcherClient watcherClient, String watchId, String[] indices, String[] types) {
@@ -211,11 +168,11 @@ public class XPackMain {
                         .trigger(schedule(interval("10s")))
                         .input(searchInput(new WatcherSearchTemplateRequest(indices, null, SearchType.DEFAULT,
                                 WatcherSearchTemplateRequest.DEFAULT_INDICES_OPTIONS, searchSource().query(
-                                        matchQuery("message", "error")
+                                matchQuery("message", "error")
 //                                boolQuery().must(matchQuery("message", "error"))
 //                                .filter(rangeQuery("date").gt("{{ctx.trigger.scheduled_time}}"))
 //                                .filter(rangeQuery("date").lt("{{ctx.execution_time}}"))
-                        ).buildAsBytes())))
+                        ).buildAsBytes(XContentType.JSON))))
                         .condition(new CompareCondition("ctx.payload.hits.total", CompareCondition.Op.GT, 1L))
                 /*.addAction("email_someone", emailAction(EmailTemplate.builder()
                         .to("1007811421@domain.host.com")
@@ -226,7 +183,7 @@ public class XPackMain {
                                 indexAction("tdl_alert_match_index_java", "tdl_alert_match_type_java")
 //                                        .setExecutionTimeField("????")
                         )
-//                .addAction("jdbc-action", new JdbcAction.Builder()) // notes by taidl@2017/10/13_16:41 has not finished
+//                        .addAction("jdbc-action", new JdbcAction.Builder()) // notes by taidl@2017/10/13_16:41 has not finished
         ).get();
         System.out.println("put watch result:\n" + putWatchResponse2.getId() + "\n===============");
 
@@ -261,14 +218,14 @@ public class XPackMain {
         DeleteWatchResponse deleteWatchResponse = watcherClient.prepareDeleteWatch(watchId).get();
     }
 
-        /**
-         * This API enables on-demand execution of a watch stored in the .watches index. It can be used to
-         * test a watch without executing all its actions or by ignoring its condition. The response contains
-         * a BytesReference that represents the record that would be written to the .watcher-history index
-         *
-         * @param watcherClient
-         * @param watchId
-         */
+    /**
+     * This API enables on-demand execution of a watch stored in the .watches index. It can be used to
+     * test a watch without executing all its actions or by ignoring its condition. The response contains
+     * a BytesReference that represents the record that would be written to the .watcher-history index
+     *
+     * @param watcherClient
+     * @param watchId
+     */
     public static void executeWatchApi(WatcherClient watcherClient, String watchId) throws IOException {
         ExecuteWatchResponse executeWatchResponse = watcherClient.prepareExecuteWatch(watchId)
                 // execute the actions, ignoring the watch condition
