@@ -7,13 +7,12 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class URIs {
     static String SLASH = "/", BACKSLASH = "\\", COMMA = ",", SEMICOLON = ";", COLON = ":",
             AT = "@", QUESTION_MARK = "?", AMPERSAND = "&", EQUAL = "=", JINHAO = "#", XINHAO = "*";
-    private static String DEFAULT_ENCODE = "UTF-8";
-
+    private static String DEFAULT_CHARSET = "UTF-8";
+    private String charset;
     private String uri;
 
     private String schema;
@@ -25,7 +24,12 @@ public class URIs {
     private String fragment;
 
     public URIs(String uri) throws UnsupportedEncodingException {
+        this(uri, DEFAULT_CHARSET);
+    }
+
+    public URIs(String uri, String charset) throws UnsupportedEncodingException {
         this.uri = uri;
+        this.charset = charset;
         parse();
     }
 
@@ -39,7 +43,7 @@ public class URIs {
         index = remain.lastIndexOf(locator);
         if (index > 0) { // has fragment
             String fragment = remain.length() == locator.length() + index ? null : remain.substring(index + locator.length());
-            this.fragment = (null == fragment) ? null : URLDecoder.decode(fragment, DEFAULT_ENCODE);
+            this.fragment = (null == fragment) ? null : URLDecoder.decode(fragment, charset);
             remain = remain.substring(0, index);
         }
 
@@ -58,7 +62,7 @@ public class URIs {
         String schema;
         if (index <= 0 || (schema = remain.substring(0, index)).isEmpty())
             throw new IllegalStateException("schema is not set");
-        this.schema = URLDecoder.decode(schema, DEFAULT_ENCODE);
+        this.schema = URLDecoder.decode(schema, charset);
         remain = remain.substring(index + locator.length());
 
         // parse authority
@@ -85,8 +89,8 @@ public class URIs {
         for (String s : query.split(AMPERSAND)) {
             if (s == null || s.isEmpty()) continue;
             String[] pair = s.split(EQUAL, 2);
-            String key = URLDecoder.decode(pair[0], DEFAULT_ENCODE);
-            String value = pair.length < 2 ? null : URLDecoder.decode(pair[1], DEFAULT_ENCODE);
+            String key = URLDecoder.decode(pair[0], charset);
+            String value = pair.length < 2 ? null : URLDecoder.decode(pair[1], charset);
             parameters.put(key, value);
         }
     }
@@ -94,8 +98,8 @@ public class URIs {
     private void parseAuthority(String authority) throws UnsupportedEncodingException {
         if (null == authority || authority.isEmpty()) return;
         String[] up = authority.split(COLON, 2);
-        username = URLDecoder.decode(up[0], DEFAULT_ENCODE);
-        password = up.length < 2 ? null : URLDecoder.decode(up[1], DEFAULT_ENCODE);
+        username = URLDecoder.decode(up[0], charset);
+        password = up.length < 2 ? null : URLDecoder.decode(up[1], charset);
     }
 
     private void parseHostAndPort(String hostAndPort) throws UnsupportedEncodingException {
@@ -112,7 +116,7 @@ public class URIs {
                 if (i == array.length - 1) throw new RuntimeException("No port assigned.");
                 array[i][1] = array[i + 1][1];
             }
-            array[i][0] = URLDecoder.decode(array[i][0], DEFAULT_ENCODE);
+            array[i][0] = URLDecoder.decode(array[i][0], charset);
             try {
                 port = Integer.parseInt(array[i][1]);
             } catch (NumberFormatException e) {
@@ -128,7 +132,7 @@ public class URIs {
         if (null == path || path.isEmpty()) return;
         for (String s : path.split(SLASH)) {
             if (null == s || s.isEmpty()) continue;
-            paths.add(URLDecoder.decode(s, DEFAULT_ENCODE));
+            paths.add(URLDecoder.decode(s, charset));
         }
     }
 
@@ -197,68 +201,43 @@ public class URIs {
         return fragment;
     }
 
-    public static void main(String[] args) throws UnsupportedEncodingException {
-        URIs uri = parse("zookeeper://user+name:pass%21word@172.16.16.232:2181,172.16.16.232,172.16.16.232:2182/namespace/table?contry=%E6%B1%89%E5%AD%97#fragment");
-        System.out.println(uri);
-        System.out.println(uri.getSchema());
-        System.out.println(uri.getUsername());
-        System.out.println(uri.getPassword());
-        System.out.println(uri.getHostsAsString());
-        System.out.println(uri.getParametersAsString());
-        System.out.println(uri.getFragment());
-
-        System.out.println();
-        System.out.println(uri.getHostAt(1));
-        System.out.println(uri.getParameter("contry"));
-
-        uri = URIs.builder()
-                .schema("elastic search")
-                .username("pseudo-elasticsearch")
-                .password("!@#QAZ123qaz")
-                .host("172.16.16.232", 9200)
-                .host("172.16.16.233", null)
-                .host("172.16.16.234", 9300)
-                .path("pa/th")
-                .path("/to")
-                .path("your")
-                .path("dest")
-                .parameter("batch", 2000)
-                .parameter("limit", 10000000)
-                .parameter("haha", "hehe!@")
-                .fragment("标签")
-                .build();
-
-        System.out.println(uri);
-        System.out.println(uri.toString(true));
-        System.out.println(uri.toString(false));
-        System.out.println(uri.getPathAt(0));
-    }
-
-    private static String decode(String origin, boolean encoded) {
+    /**
+     *  encode or decode a string
+     * @param origin the string to translate
+     * @param charset charset
+     * @param encode if true  encode; else decode
+     * @return encoded/decoded string , if exception happens ,then origin
+     */
+    private static String translate(String origin, String charset, Boolean encode) {
+        if (null == encode) return origin;
         try {
-            return encoded ? URLDecoder.decode(origin, DEFAULT_ENCODE) : origin;
+            return encode ? URLEncoder.encode(origin, charset) : URLDecoder.decode(origin, charset);
         } catch (UnsupportedEncodingException e) {
             return origin;
         }
     }
 
-    private static String encode(String origin, String charset) throws UnsupportedEncodingException {
-        return URLEncoder.encode(origin, charset);
-    }
-
     @Override
     public String toString() {
-        return toString(false);
+        return toString(true);
+    }
+
+    public String toString(boolean encoded) {
+        return encoded ? buildString(true) : buildString(null);
     }
     
-    public String toString(boolean decoded) {
+    private String buildString(Boolean encode) {
         StringBuilder sb = new StringBuilder();
-        sb.append(decode(schema, decoded)).append(COLON).append(SLASH).append(SLASH);
-        if (null != getAuthority()) sb.append(decode(getAuthority(), decoded)).append(AT);
-        if (null != getHostsAsString()) sb.append(decode(getHostsAsString(), decoded));
-        if (null != getPathsAsString()) sb.append(decode(getPathsAsString(), decoded));
+        sb.append(translate(schema, charset, encode)).append(COLON).append(SLASH).append(SLASH);
+        if (null != getUsername()) {
+            sb.append(translate(getUsername(), charset, encode));
+            if (null != getPassword()) sb.append(COLON).append(translate(getPassword(), charset, encode));
+            sb.append(AT);
+        }
+        if (null != getHostsAsString()) sb.append(translate(getHostsAsString(), charset, encode));
+        if (null != getPathsAsString()) sb.append(translate(getPathsAsString(), charset, encode));
         if (null != getParametersAsString()) sb.append(QUESTION_MARK).append(getParametersAsString());
-        if (null != getFragment()) sb.append(JINHAO).append(decode(getFragment(), decoded));
+        if (null != getFragment()) sb.append(JINHAO).append(translate(getFragment(), charset, encode));
         return sb.toString();
     }
 
@@ -321,26 +300,28 @@ public class URIs {
             return this;
         }
 
-
         public URIs build() throws UnsupportedEncodingException {
-            String charset = URIs.DEFAULT_ENCODE;
+            return build(DEFAULT_CHARSET);
+        }
+
+        public URIs build(String charset) throws UnsupportedEncodingException {
             StringBuilder sb = new StringBuilder();
-            sb.append(encode(schema, charset)).append(COLON).append(SLASH).append(SLASH);
+            sb.append(translate(schema, charset, true)).append(COLON).append(SLASH).append(SLASH);
             if (null != username) {
-                sb.append(encode(username, charset));
-                if (null != password) sb.append(COLON).append(encode(password, charset));
+                sb.append(translate(username, charset, true));
+                if (null != password) sb.append(COLON).append(translate(password, charset, true));
                 sb.append(AT);
             }
             for (int i = 0 ; i < hosts.size(); i++) {
                 Tuple2<String, Integer> tuple = hosts.get(i);
-                sb.append(encode(tuple.v1(), charset));
+                sb.append(translate(tuple.v1(), charset, true));
                 if (null != tuple.v2()) sb.append(COLON).append(tuple.v2);
                 if (i != hosts.size() - 1) sb.append(COMMA);
             }
             if (paths.size() > 0) {
                 StringBuilder pathBuilder = new StringBuilder();
                 for (String p : paths) {
-                    pathBuilder.append(SLASH).append(encode(p, charset));
+                    pathBuilder.append(SLASH).append(translate(p, charset, true));
                 }
                 sb.append(pathBuilder);
             }
@@ -349,14 +330,14 @@ public class URIs {
                 List<Map.Entry<String, Object>> entries = new ArrayList<>(parameters.entrySet());
                 for (int i = 0; i < entries.size(); i++) {
                     Map.Entry<String, Object> entry = entries.get(i);
-                    sb.append(encode(entry.getKey(), charset));
+                    sb.append(translate(entry.getKey(), charset, true));
                     if (null != entry.getValue())
-                        sb.append(EQUAL).append(encode(entry.getValue().toString(), charset));
+                        sb.append(EQUAL).append(translate(entry.getValue().toString(), charset, true));
                     if (i != entries.size() - 1) sb.append(AMPERSAND);
                 }
             }
-            if (null != fragment) sb.append(JINHAO).append(encode(fragment, charset));
-            return new URIs(sb.toString());
+            if (null != fragment) sb.append(JINHAO).append(translate(fragment, charset, true));
+            return new URIs(sb.toString(), charset);
         }
     }
 }
