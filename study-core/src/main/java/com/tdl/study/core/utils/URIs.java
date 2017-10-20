@@ -211,14 +211,39 @@ public class URIs {
         System.out.println(uri.getHostAt(1));
         System.out.println(uri.getParameter("contry"));
 
+        uri = URIs.builder()
+                .schema("elastic search")
+                .username("pseudo-elasticsearch")
+                .password("!@#QAZ123qaz")
+                .host("172.16.16.232", 9200)
+                .host("172.16.16.233", null)
+                .host("172.16.16.234", 9300)
+                .path("pa/th")
+                .path("/to")
+                .path("your")
+                .path("dest")
+                .parameter("batch", 2000)
+                .parameter("limit", 10000000)
+                .parameter("haha", "hehe!@")
+                .fragment("标签")
+                .build();
+
+        System.out.println(uri);
+        System.out.println(uri.toString(true));
+        System.out.println(uri.toString(false));
+        System.out.println(uri.getPathAt(0));
     }
 
-    private String decode(String origin, boolean encoded) {
+    private static String decode(String origin, boolean encoded) {
         try {
             return encoded ? URLDecoder.decode(origin, DEFAULT_ENCODE) : origin;
         } catch (UnsupportedEncodingException e) {
             return origin;
         }
+    }
+
+    private static String encode(String origin, String charset) throws UnsupportedEncodingException {
+        return URLEncoder.encode(origin, charset);
     }
 
     @Override
@@ -235,5 +260,103 @@ public class URIs {
         if (null != getParametersAsString()) sb.append(QUESTION_MARK).append(getParametersAsString());
         if (null != getFragment()) sb.append(JINHAO).append(decode(getFragment(), decoded));
         return sb.toString();
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private String schema;
+        private String username;
+        private String password;
+        private List<Tuple2<String, Integer>> hosts = new ArrayList<>();
+        private List<String> paths = new ArrayList<>();
+        private Map<String, Object> parameters = new HashMap<>();
+        private String fragment;
+
+        public Builder schema(String schema) {
+            this.schema = schema;
+            return this;
+        }
+
+        public Builder username(String username) {
+            this.username = username;
+            return this;
+        }
+
+        public Builder password(String password) {
+            this.password = password;
+            return this;
+        }
+
+        public Builder host(String host, Integer port) {
+            hosts.add(new Tuple2<String, Integer>(host, port));
+            return this;
+        }
+
+        /**
+         * add path once a level
+         * @param path
+         * @return
+         */
+        public Builder path(String path) {
+            if (null == path || path.isEmpty()) return this;
+            paths.add(path.replaceAll("^/+", "").replaceAll("/+$", ""));
+            return this;
+        }
+
+        public Builder parameter(String key, Object value) {
+            parameters.put(key, value);
+            return this;
+        }
+
+        public Builder parameters(Map<String, Object> entries) {
+            parameters.putAll(entries);
+            return this;
+        }
+
+        public Builder fragment(String fragment) {
+            this.fragment = fragment;
+            return this;
+        }
+
+
+        public URIs build() throws UnsupportedEncodingException {
+            String charset = URIs.DEFAULT_ENCODE;
+            StringBuilder sb = new StringBuilder();
+            sb.append(encode(schema, charset)).append(COLON).append(SLASH).append(SLASH);
+            if (null != username) {
+                sb.append(encode(username, charset));
+                if (null != password) sb.append(COLON).append(encode(password, charset));
+                sb.append(AT);
+            }
+            for (int i = 0 ; i < hosts.size(); i++) {
+                Tuple2<String, Integer> tuple = hosts.get(i);
+                sb.append(encode(tuple.v1(), charset));
+                if (null != tuple.v2()) sb.append(COLON).append(tuple.v2);
+                if (i != hosts.size() - 1) sb.append(COMMA);
+            }
+            if (paths.size() > 0) {
+                StringBuilder pathBuilder = new StringBuilder();
+                for (String p : paths) {
+                    pathBuilder.append(SLASH).append(encode(p, charset));
+                }
+                sb.append(pathBuilder);
+            }
+            if (parameters.size() > 0) {
+                sb.append(QUESTION_MARK);
+                List<Map.Entry<String, Object>> entries = new ArrayList<>(parameters.entrySet());
+                for (int i = 0; i < entries.size(); i++) {
+                    Map.Entry<String, Object> entry = entries.get(i);
+                    sb.append(encode(entry.getKey(), charset));
+                    if (null != entry.getValue())
+                        sb.append(EQUAL).append(encode(entry.getValue().toString(), charset));
+                    if (i != entries.size() - 1) sb.append(AMPERSAND);
+                }
+            }
+            if (null != fragment) sb.append(JINHAO).append(encode(fragment, charset));
+            return new URIs(sb.toString());
+        }
     }
 }
