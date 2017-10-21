@@ -6,6 +6,9 @@ import java.util.stream.Collectors;
 
 public class Strings {
 
+    public static boolean empty(String string) {
+        return null == string || string.isEmpty();
+    }
 
     public static String join(final String delimiter, String ... values) {
         return join(delimiter, Arrays.asList(values));

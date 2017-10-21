@@ -7,6 +7,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class URIs {
     static String SLASH = "/", BACKSLASH = "\\", COMMA = ",", SEMICOLON = ";", COLON = ":",
@@ -205,13 +206,13 @@ public class URIs {
      *  encode or decode a string
      * @param origin the string to translate
      * @param charset charset
-     * @param encode if true  encode; else decode
+     * @param action if true  encode; else decode
      * @return encoded/decoded string , if exception happens ,then origin
      */
-    private static String translate(String origin, String charset, Boolean encode) {
-        if (null == encode) return origin;
+    private static String translate(String origin, String charset, Action action) {
+        if (Action.DO_NOTHING == action) return origin;
         try {
-            return encode ? URLEncoder.encode(origin, charset) : URLDecoder.decode(origin, charset);
+            return Action.ENCODE == action ? URLEncoder.encode(origin, charset) : URLDecoder.decode(origin, charset);
         } catch (UnsupportedEncodingException e) {
             return origin;
         }
@@ -223,22 +224,42 @@ public class URIs {
     }
 
     public String toString(boolean encoded) {
-        return encoded ? buildString(true) : buildString(null);
+        return encoded ? buildString(Action.ENCODE) : buildString(Action.DO_NOTHING);
     }
     
-    private String buildString(Boolean encode) {
+    private String buildString(Action action) {
         StringBuilder sb = new StringBuilder();
-        sb.append(translate(schema, charset, encode)).append(COLON).append(SLASH).append(SLASH);
+        sb.append(translate(schema, charset, action)).append(COLON).append(SLASH).append(SLASH);
         if (null != getUsername()) {
-            sb.append(translate(getUsername(), charset, encode));
-            if (null != getPassword()) sb.append(COLON).append(translate(getPassword(), charset, encode));
+            sb.append(translate(getUsername(), charset, action));
+            if (null != getPassword()) sb.append(COLON).append(translate(getPassword(), charset, action));
             sb.append(AT);
         }
-        if (null != getHostsAsString()) sb.append(translate(getHostsAsString(), charset, encode));
-        if (null != getPathsAsString()) sb.append(translate(getPathsAsString(), charset, encode));
-        if (null != getParametersAsString()) sb.append(QUESTION_MARK).append(getParametersAsString());
-        if (null != getFragment()) sb.append(JINHAO).append(translate(getFragment(), charset, encode));
+        for (int i = 0; hosts.size() > 0 && i < hosts.size(); i++) {
+            sb.append(translate(hosts.get(i).v1(), charset, action)).append(COLON).append(hosts.get(i).v2());
+            if (i != hosts.size() - 1) sb.append(COMMA);
+        }
+        for (int i = 0; paths.size() > 0 && i < paths.size(); i++) {
+            sb.append(SLASH).append(translate(paths.get(i), charset, action));
+        }
+        if (parameters.size() > 0) {
+            sb.append(QUESTION_MARK);
+            List<Tuple2<String, String>> params = parameters.entrySet().stream().map(entry -> new Tuple2<String, String>(entry.getKey(), entry.getValue())).collect(Collectors.toList());
+            for (int i = 0; i < params.size(); i++) {
+                Tuple2<String, String> tuple = params.get(i);
+                sb.append(translate(tuple.v1(), charset, action));
+                if (null != tuple.v2()) sb.append(EQUAL).append(translate(tuple.v2(), charset, action));
+                if (i != params.size() - 1) sb.append(AMPERSAND);
+            }
+        }
+        if (null != getFragment()) sb.append(JINHAO).append(translate(getFragment(), charset, action));
         return sb.toString();
+    }
+
+    private enum Action {
+        ENCODE,
+        DECODE,
+        DO_NOTHING
     }
 
     public static Builder builder() {
@@ -253,6 +274,8 @@ public class URIs {
         private List<String> paths = new ArrayList<>();
         private Map<String, Object> parameters = new HashMap<>();
         private String fragment;
+
+        private Builder() {}
 
         public Builder schema(String schema) {
             this.schema = schema;
@@ -280,8 +303,16 @@ public class URIs {
          * @return
          */
         public Builder path(String path) {
-            if (null == path || path.isEmpty()) return this;
-            paths.add(path.replaceAll("^/+", "").replaceAll("/+$", ""));
+            if (!Strings.empty(path)) {
+                String rp = path.replaceAll("^/+", "").replaceAll("/+$", "");
+                if (!Strings.empty(rp)) paths.add(rp);
+            }
+            return this;
+        }
+
+        public Builder paths(String path) {
+            if (Strings.empty(path)) return this;
+            Stream.of(path.split(SLASH)).filter(p -> !Strings.empty(p)).forEach(p -> paths.add(p));
             return this;
         }
 
@@ -306,22 +337,22 @@ public class URIs {
 
         public URIs build(String charset) throws UnsupportedEncodingException {
             StringBuilder sb = new StringBuilder();
-            sb.append(translate(schema, charset, true)).append(COLON).append(SLASH).append(SLASH);
+            sb.append(translate(schema, charset, Action.ENCODE)).append(COLON).append(SLASH).append(SLASH);
             if (null != username) {
-                sb.append(translate(username, charset, true));
-                if (null != password) sb.append(COLON).append(translate(password, charset, true));
+                sb.append(translate(username, charset, Action.ENCODE));
+                if (null != password) sb.append(COLON).append(translate(password, charset, Action.ENCODE));
                 sb.append(AT);
             }
             for (int i = 0 ; i < hosts.size(); i++) {
                 Tuple2<String, Integer> tuple = hosts.get(i);
-                sb.append(translate(tuple.v1(), charset, true));
+                sb.append(translate(tuple.v1(), charset, Action.ENCODE));
                 if (null != tuple.v2()) sb.append(COLON).append(tuple.v2);
                 if (i != hosts.size() - 1) sb.append(COMMA);
             }
             if (paths.size() > 0) {
                 StringBuilder pathBuilder = new StringBuilder();
                 for (String p : paths) {
-                    pathBuilder.append(SLASH).append(translate(p, charset, true));
+                    pathBuilder.append(SLASH).append(translate(p, charset, Action.ENCODE));
                 }
                 sb.append(pathBuilder);
             }
@@ -330,13 +361,13 @@ public class URIs {
                 List<Map.Entry<String, Object>> entries = new ArrayList<>(parameters.entrySet());
                 for (int i = 0; i < entries.size(); i++) {
                     Map.Entry<String, Object> entry = entries.get(i);
-                    sb.append(translate(entry.getKey(), charset, true));
+                    sb.append(translate(entry.getKey(), charset, Action.ENCODE));
                     if (null != entry.getValue())
-                        sb.append(EQUAL).append(translate(entry.getValue().toString(), charset, true));
+                        sb.append(EQUAL).append(translate(entry.getValue().toString(), charset, Action.ENCODE));
                     if (i != entries.size() - 1) sb.append(AMPERSAND);
                 }
             }
-            if (null != fragment) sb.append(JINHAO).append(translate(fragment, charset, true));
+            if (null != fragment) sb.append(JINHAO).append(translate(fragment, charset, Action.ENCODE));
             return new URIs(sb.toString(), charset);
         }
     }
