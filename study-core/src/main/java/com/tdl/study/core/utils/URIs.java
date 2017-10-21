@@ -44,7 +44,7 @@ public class URIs {
         index = remain.lastIndexOf(locator);
         if (index > 0) { // has fragment
             String fragment = remain.length() == locator.length() + index ? null : remain.substring(index + locator.length());
-            this.fragment = (null == fragment) ? null : URLDecoder.decode(fragment, charset);
+            this.fragment = translate(fragment, charset, Action.DECODE);
             remain = remain.substring(0, index);
         }
 
@@ -63,7 +63,7 @@ public class URIs {
         String schema;
         if (index <= 0 || (schema = remain.substring(0, index)).isEmpty())
             throw new IllegalStateException("schema is not set");
-        this.schema = URLDecoder.decode(schema, charset);
+        this.schema = translate(schema, charset, Action.DECODE);
         remain = remain.substring(index + locator.length());
 
         // parse authority
@@ -85,22 +85,22 @@ public class URIs {
     }
 
     private void parseParameters(String query) throws UnsupportedEncodingException {
-        if (null == query || "".equals(query)) return;
+        if (Strings.empty(query)) return;
 
         for (String s : query.split(AMPERSAND)) {
-            if (s == null || s.isEmpty()) continue;
+            if (Strings.empty(s)) continue;
             String[] pair = s.split(EQUAL, 2);
-            String key = URLDecoder.decode(pair[0], charset);
-            String value = pair.length < 2 ? null : URLDecoder.decode(pair[1], charset);
+            String key = translate(pair[0], charset, Action.DECODE);
+            String value = pair.length < 2 ? null : translate(pair[1], charset, Action.DECODE);
             parameters.put(key, value);
         }
     }
 
     private void parseAuthority(String authority) throws UnsupportedEncodingException {
-        if (null == authority || authority.isEmpty()) return;
+        if (Strings.empty(authority)) return;
         String[] up = authority.split(COLON, 2);
-        username = URLDecoder.decode(up[0], charset);
-        password = up.length < 2 ? null : URLDecoder.decode(up[1], charset);
+        username = translate(up[0], charset, Action.DECODE);
+        password = up.length < 2 ? null : translate(up[1], charset, Action.DECODE);
     }
 
     private void parseHostAndPort(String hostAndPort) throws UnsupportedEncodingException {
@@ -117,7 +117,7 @@ public class URIs {
                 if (i == array.length - 1) throw new RuntimeException("No port assigned.");
                 array[i][1] = array[i + 1][1];
             }
-            array[i][0] = URLDecoder.decode(array[i][0], charset);
+            array[i][0] = translate(array[i][0], charset, Action.DECODE);
             try {
                 port = Integer.parseInt(array[i][1]);
             } catch (NumberFormatException e) {
@@ -133,7 +133,7 @@ public class URIs {
         if (null == path || path.isEmpty()) return;
         for (String s : path.split(SLASH)) {
             if (null == s || s.isEmpty()) continue;
-            paths.add(URLDecoder.decode(s, charset));
+            paths.add(translate(s, charset, Action.DECODE));
         }
     }
 
@@ -297,20 +297,7 @@ public class URIs {
             return this;
         }
 
-        /**
-         * add path once a level
-         * @param path
-         * @return
-         */
         public Builder path(String path) {
-            if (!Strings.empty(path)) {
-                String rp = path.replaceAll("^/+", "").replaceAll("/+$", "");
-                if (!Strings.empty(rp)) paths.add(rp);
-            }
-            return this;
-        }
-
-        public Builder paths(String path) {
             if (Strings.empty(path)) return this;
             Stream.of(path.split(SLASH)).filter(p -> !Strings.empty(p)).forEach(p -> paths.add(p));
             return this;
