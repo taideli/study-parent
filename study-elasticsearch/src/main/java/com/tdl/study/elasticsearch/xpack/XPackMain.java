@@ -38,6 +38,7 @@ import org.elasticsearch.xpack.watcher.transport.actions.ack.AckWatchResponse;
 import org.elasticsearch.xpack.watcher.transport.actions.activate.ActivateWatchResponse;
 import org.elasticsearch.xpack.watcher.transport.actions.delete.DeleteWatchResponse;
 import org.elasticsearch.xpack.watcher.transport.actions.execute.ExecuteWatchResponse;
+import org.elasticsearch.xpack.watcher.transport.actions.get.GetWatchRequest;
 import org.elasticsearch.xpack.watcher.transport.actions.get.GetWatchResponse;
 import org.elasticsearch.xpack.watcher.transport.actions.put.PutWatchResponse;
 import org.elasticsearch.xpack.watcher.transport.actions.service.WatcherServiceResponse;
@@ -65,9 +66,10 @@ import static org.elasticsearch.xpack.watcher.trigger.schedule.Schedules.interva
 public class XPackMain {
 
     public static void main(String[] args) {
-//        String index = "logs";
         String[] indices = new String[]{"logs"};
         String[] types = new String[]{"event"};
+//        String watchId = "tdl_watcher_java";
+        String watchId = "tdl_query_match_watcher";
 
         TransportClient client = new PreBuiltXPackTransportClient(
                 Settings.builder()
@@ -76,14 +78,24 @@ public class XPackMain {
 //        ).addTransportAddresses(
         ).addTransportAddress(
                 new InetSocketTransportAddress(
-//                        new InetSocketAddress("172.16.16.232", 9300) // notes by taidl@2017/10/13_17:16 must 9300
-                        new InetSocketAddress("192.168.1.104", 9300) // notes by taidl@2017/10/13_17:16 must 9300
+                        new InetSocketAddress("172.16.16.232", 9300) // notes by taidl@2017/10/13_17:16 must 9300
+//                        new InetSocketAddress("192.168.1.104", 9300) // notes by taidl@2017/10/13_17:16 must 9300
                 )
         );
 
         XPackClient xpackClient = new XPackClient(client);
         WatcherClient watcherClient = xpackClient.watcher();
 
+        printClusterHealth(client);
+
+//        putWatch(watcherClient, watchId, indices, types);
+        getWatch(watcherClient, watchId);
+//        deleteWatch(watcherClient, watchId);
+
+        client.close();
+    }
+
+    public static void printClusterHealth(TransportClient client) {
         client.admin().cluster().health(new ClusterHealthRequest(), new ActionListener<ClusterHealthResponse>() {
             @Override
             public void onResponse(ClusterHealthResponse clusterHealthResponse) {
@@ -95,16 +107,6 @@ public class XPackMain {
 
             }
         });
-
-//        putWatch(watcherClient, "tdl_watcher_java", indices, types);
-//        deleteWatch(watcherClient, "tdl_watcher_java");
-
-            print();
-        client.close();
-        System.out.println("finished and close");
-    }
-
-    public static void print() {
     }
 
 
@@ -152,7 +154,6 @@ public class XPackMain {
                 .setSource(wsBuilder).get();
     }
 
-
     /**
      * 用法
      * Use TriggerBuilders and Schedules classes to define the trigger
@@ -195,22 +196,31 @@ public class XPackMain {
 
     public static void getWatch(WatcherClient watcherClient, String watchId) {
         /*异步版本*/
-//        GetWatchResponse getWatchResponse = watcherClient.getWatch(watchRequest, actionListioner)
+/*        watcherClient.getWatch(new GetWatchRequest(watchId), new ActionListener<GetWatchResponse>() {
+            @Override
+            public void onResponse(GetWatchResponse getWatchResponse) {
+
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        });*/
         // get a watch with id
         GetWatchResponse getWatchResponse = watcherClient.prepareGetWatch(watchId).get();
         // access the watch definition by access of the response
         XContentSource source = getWatchResponse.getSource();
         // explore the source
+        if (null == source) {
+            System.out.println("no watcher with id: " + watchId);
+            return;
+        }
         Map<String, Object> map = source.getAsMap();
 
         System.out.println("get watch " + watchId + ":===========\n");
-        map.forEach((k, v) -> {
-            System.out.println(k + "   ->     " + v);
-        });
-        System.out.println(" end of get watch " + watchId + ":===========\n");
-        // or get a specific value associated with a known key
-        String host = source.getValue("input.http.request.host");
-
+        map.forEach((k, v) -> System.out.println(k + "   ->     " + v));
+        System.out.println("end of get watch " + watchId + ":===========\n");
     }
 
     public static void deleteWatch(WatcherClient watcherClient, String watchId) {
