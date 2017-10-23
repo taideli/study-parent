@@ -4,12 +4,12 @@ import com.tdl.study.core.utils.URIs;
 
 import java.io.UnsupportedEncodingException;
 
-public class URITest {
+public class URIsTest {
     public static void main(String[] args) throws UnsupportedEncodingException {
         URIs uri = URIs.builder()
                 .schema("elastic search")
                 .username("jdbcd%")
-                .password("!@#123qazWSX")
+                .password("!@DWE%$#dfg543")
                 .host("172.16.16.232", null)
                 .host("172.16.16.233", 1234)
                 .parameter("name", null)

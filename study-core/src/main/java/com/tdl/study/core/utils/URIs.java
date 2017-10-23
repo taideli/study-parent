@@ -9,6 +9,20 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * the URIs defines a connection to a resource
+ * a uri contains some fields :
+ * <br/>schema - required
+ * <br/>username - optional
+ * <br/>password - optional
+ * <br/>hosts - required
+ * <br/>ports - at least one port must be specified, if a host with no port assigned, then use the front host's port, else the back host's port, if no port assigned, an exception will throw out
+ * <br/>path - optional
+ * <br/>query - optional
+ * <br/>fragment - optional
+ * <br/>
+ * <br/>all the fields should URL encoded, otherwise analysis may get wrong values
+ */
 public class URIs {
     static String SLASH = "/", BACKSLASH = "\\", COMMA = ",", SEMICOLON = ";", COLON = ":",
             AT = "@", QUESTION_MARK = "?", AMPERSAND = "&", EQUAL = "=", JINHAO = "#", XINHAO = "*";
@@ -218,11 +232,20 @@ public class URIs {
         }
     }
 
+    /**
+     * the URIs string value with URL encoded
+     * @return
+     */
     @Override
     public String toString() {
         return toString(true);
     }
 
+    /**
+     * URIs string value
+     * @param encoded
+     * @return true - string with url encoded, false - url decoded
+     */
     public String toString(boolean encoded) {
         return encoded ? buildString(Action.ENCODE) : buildString(Action.DO_NOTHING);
     }
