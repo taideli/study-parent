@@ -4,6 +4,7 @@ import com.tdl.study.core.io.output.OutputImpl;
 import com.tdl.study.core.utils.URIs;
 import org.apache.kafka.clients.producer.*;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -16,14 +17,17 @@ public class KafkaOutput extends OutputImpl<ProducerRecord<byte[], byte[]>> {
     }
 
     public KafkaOutput(String name, URIs uri) {
-        Properties properties = new Properties();
-        uri.getHostsAsString()
+        Properties properties = KafkaConfig.getProducerConfig(uri);
         producer = new KafkaProducer<byte[], byte[]>(properties);
         closing(() -> producer.close());
         open();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws UnsupportedEncodingException {
+
+    }
+
+    public static void test() {
         Properties kafkaProps = new Properties();
 //        kafkaProps.put("bootstrap.servers", "172.16.16.232:9092,172.16.16.232:9093");
         kafkaProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "172.16.16.232:9092");
