@@ -38,14 +38,18 @@ public class URIs {
     private Map<String, String> parameters = new HashMap<>();
     private String fragment;
 
-    public URIs(String uri) throws UnsupportedEncodingException {
+    public URIs(String uri) {
         this(uri, DEFAULT_CHARSET);
     }
 
-    public URIs(String uri, String charset) throws UnsupportedEncodingException {
+    public URIs(String uri, String charset) {
         this.uri = uri;
         this.charset = charset;
-        parse();
+        try {
+            parse();
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void parse() throws UnsupportedEncodingException {
