@@ -6,7 +6,6 @@ import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
 public class ConfigTest {
@@ -21,12 +20,12 @@ public class ConfigTest {
                 .parameter(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true)
                 .parameter(ProducerConfig.ACKS_CONFIG, true)
                 .build();
-        Properties properties = KafkaConfig.getProducerConfig(uri);
+        Properties properties = KafkaConfig.getProducerProperties(uri);
         properties.forEach((k, v) -> {
             System.out.println(k + " -> " + v);
         });
         System.out.println("====================================");
-        properties = KafkaConfig.getConsumerConfig(uri);
+        properties = KafkaConfig.getConsumerProperties(uri);
         properties.forEach((k, v) -> {
             System.out.println(k + " -> " + v);
         });

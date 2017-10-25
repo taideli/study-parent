@@ -17,7 +17,7 @@ public class KafkaOutput extends OutputImpl<ProducerRecord<byte[], byte[]>> {
     }
 
     public KafkaOutput(String name, URIs uri) {
-        Properties properties = KafkaConfig.getProducerConfig(uri);
+        Properties properties = KafkaConfig.getProducerProperties(uri);
         producer = new KafkaProducer<byte[], byte[]>(properties);
         closing(() -> producer.close());
         open();

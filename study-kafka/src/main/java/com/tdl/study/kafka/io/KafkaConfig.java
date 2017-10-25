@@ -25,7 +25,7 @@ public final class KafkaConfig {
      * @param uri the uri as source
      * @return properties with standard key and value form uris query
      */
-    public static Properties getProducerConfig(URIs uri) {
+    public static Properties getProducerProperties(URIs uri) {
         Properties properties = new Properties();
         uri.getParameters().forEach((k, v) -> {
             if (PRODUCER_CONFIG_KEYS.contains(k)) properties.put(k, v);
@@ -40,7 +40,7 @@ public final class KafkaConfig {
      * @param uri the uri as source
      * @return properties with standard key and value form uris query
      */
-    public static Properties getConsumerConfig(URIs uri) {
+    public static Properties getConsumerProperties(URIs uri) {
         Properties properties = new Properties();
         uri.getParameters().forEach((k, v) -> {
             if (CONSUMER_CONFIG_KEYS.contains(k)) properties.put(k, v);
