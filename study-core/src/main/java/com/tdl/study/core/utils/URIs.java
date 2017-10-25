@@ -232,7 +232,7 @@ public class URIs {
         try {
             return Action.ENCODE == action ? URLEncoder.encode(origin, charset) : URLDecoder.decode(origin, charset);
         } catch (UnsupportedEncodingException e) {
-            return origin;
+            throw new RuntimeException(e);
         }
     }
 
@@ -345,11 +345,11 @@ public class URIs {
             return this;
         }
 
-        public URIs build() throws UnsupportedEncodingException {
+        public URIs build() {
             return build(DEFAULT_CHARSET);
         }
 
-        public URIs build(String charset) throws UnsupportedEncodingException {
+        public URIs build(String charset) {
             StringBuilder sb = new StringBuilder();
             sb.append(translate(schema, charset, Action.ENCODE)).append(COLON).append(SLASH).append(SLASH);
             if (null != username) {
