@@ -1,37 +1,71 @@
 package com.tdl.study.kafka.io;
 
 import com.tdl.study.core.utils.URIs;
-import kafka.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.config.AbstractConfig;
 
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
-import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class KafkaConfig {
-    private URIs uri;
-    private Map<String, String> query;
+/**
+ * A class that used to get standard kafka config properties from {@link URIs} query
+ */
+public final class KafkaConfig {
+    private static final List<String> PRODUCER_CONFIG_KEYS = getConfigKeys(ProducerConfig.class);
+    private static final List<String> CONSUMER_CONFIG_KEYS = getConfigKeys(ConsumerConfig.class);
 
-    public KafkaConfig(URIs uri) {
-        this.uri = uri;
-        query = uri.getParameters();
-    }
-
-
-    public Properties getConsumerConfig() {
+    /**
+     * fetch producer properties from {@link URIs} query, the standard key defined at {@link ProducerConfig} <br/>
+     * the key {@link ProducerConfig#BOOTSTRAP_SERVERS_CONFIG} fetch from uri's host
+     * @param uri the uri as source
+     * @return properties with standard key and value form uris query
+     */
+    public static Properties getProducerConfig(URIs uri) {
         Properties properties = new Properties();
-        properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, )
+        uri.getParameters().forEach((k, v) -> {
+            if (PRODUCER_CONFIG_KEYS.contains(k)) properties.put(k, v);
+        });
+        properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, uri.getHostsAsString());
         return properties;
     }
 
-    public Properties getProducerCOnfig() {
-        return new Properties();
+    /**
+     * fetch consumer properties from {@link URIs} query, the standard key defined at {@link ConsumerConfig} <br/>
+     * the key {@link ConsumerConfig#BOOTSTRAP_SERVERS_CONFIG} fetch from uri's host
+     * @param uri the uri as source
+     * @return properties with standard key and value form uris query
+     */
+    public static Properties getConsumerConfig(URIs uri) {
+        Properties properties = new Properties();
+        uri.getParameters().forEach((k, v) -> {
+            if (CONSUMER_CONFIG_KEYS.contains(k)) properties.put(k, v);
+        });
+        properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, uri.getHostsAsString());
+        return properties;
     }
 
-    private static List<String> getStaticFieldsValue(Class<?> clazz, Predicate<String> predicate) {
+    private static List<String> getConfigKeys(Class<? extends AbstractConfig> clazz) {
         if (null == clazz) return new ArrayList<>();
-
+        return Stream.of(clazz.getDeclaredFields())
+                .filter(field -> {
+                    int modifier = field.getModifiers();
+                    return  Modifier.isFinal(modifier)
+                            && Modifier.isStatic(modifier)
+                            && Modifier.isPublic(modifier)
+                            && field.getGenericType().getTypeName().equals(String.class.getName());
+                })
+                .map(field -> {
+                    try {
+                        return field.get(clazz).toString();
+                    } catch (IllegalAccessException e) {
+                        return "";
+                    }
+                })
+                .collect(Collectors.toList());
     }
 }
