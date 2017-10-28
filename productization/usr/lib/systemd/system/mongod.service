@@ -1,0 +1,13 @@
+[Unit]
+Description=mongod
+After=syslog.target network.target remote-fs.target nss-lookup.target
+
+[Service]
+Type=forking
+ExecStart=/taidl/mongod/bin/mongod --config /taidl/mongod/etc/mongod.conf
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/taidl/mongod/bin/mongod --shutdown --config /taidl/mongod/etc/mongod.conf
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
