@@ -63,7 +63,7 @@ public final class KafkaConfig {
                     try {
                         return field.get(clazz).toString();
                     } catch (IllegalAccessException e) {
-                        return "";
+                        throw new RuntimeException("Failed to get " + field.getName() + "'s static value from " + clazz.getSimpleName(), e);
                     }
                 })
                 .collect(Collectors.toList());
