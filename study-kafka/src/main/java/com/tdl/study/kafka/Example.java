@@ -9,12 +9,14 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 
 import java.util.Arrays;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 public class Example {
 
     public static void main(String[] args) {
-        new Thread(Example::producer, "producer").start();
-        new Thread(Example::consumer, "consumer").start();
+//        new Thread(Example::producer, "producer").start();
+//        new Thread(Example::consumer, "consumer").start();
+        producer();
     }
 
     static void producer() {
@@ -25,13 +27,16 @@ public class Example {
         props.put("batch.size", 16384);
         props.put("linger.ms", 1);
         props.put("buffer.memory", 33554432);
-        props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        props.put("key.serializer",   "org.apache.kafka.common.serialization.StringSerializer");
         props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
 
         Producer<String, String> producer = new KafkaProducer<>(props);
-        for(int i = 0; i < 100; i++)
-            producer.send(new ProducerRecord<String, String>("topic", Integer.toString(i), Integer.toString(i)));
+        for(int i = 0; i < 10; i++) {
+            producer.send(new ProducerRecord<String, String>("qaz", Integer.toString(i)));
+            System.out.println("send:" + i);
+        }
         producer.close();
+        System.out.println((9223372036854775807L / 1000 / 3600));
     }
 
     static void consumer() {
