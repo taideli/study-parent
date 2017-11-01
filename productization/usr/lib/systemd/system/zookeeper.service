@@ -1,9 +1,10 @@
 [Unit]
 Description=zookeeper
-After=network.target remote-fs.target nss-lookup.target
+After=syslog.target network.target remote-fs.target nss-lookup.target
 
 [Service]
 Type=forking
+Environment=JAVA_HOME=/taidl/jdk1.8.0_45
 ExecStart=/taidl/zookeeper/bin/zkServer.sh start
 ExecReload=/taidl/zookeeper/bin/zkServer.sh restart
 ExecStop=/taidl/zookeeper/bin/zkServer.sh stop
