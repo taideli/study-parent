@@ -104,10 +104,10 @@ public class URIs {
     }
 
     private void parseParameters(String query) throws UnsupportedEncodingException {
-        if (Strings.empty(query)) return;
+        if (Strings.isEmpty(query)) return;
 
         for (String s : query.split(AMPERSAND)) {
-            if (Strings.empty(s)) continue;
+            if (Strings.isEmpty(s)) continue;
             String[] pair = s.split(EQUAL, 2);
             String key = translate(pair[0], charset, Action.DECODE);
             String value = pair.length < 2 ? null : translate(pair[1], charset, Action.DECODE);
@@ -116,9 +116,9 @@ public class URIs {
     }
 
     private void parseAuthority(String authority) throws UnsupportedEncodingException {
-        if (Strings.empty(authority)) return;
+        if (Strings.isEmpty(authority)) return;
         String[] up = authority.split(COLON, 2);
-        username = Strings.empty(up[0]) ? null : translate(up[0], charset, Action.DECODE);
+        username = Strings.isEmpty(up[0]) ? null : translate(up[0], charset, Action.DECODE);
         password = up.length < 2 ? null : translate(up[1], charset, Action.DECODE);
     }
 
@@ -326,8 +326,8 @@ public class URIs {
         }
 
         public Builder path(String path) {
-            if (Strings.empty(path)) return this;
-            Stream.of(path.split(SLASH)).filter(p -> !Strings.empty(p)).forEach(p -> paths.add(p));
+            if (Strings.isEmpty(path)) return this;
+            Stream.of(path.split(SLASH)).filter(p -> !Strings.isEmpty(p)).forEach(p -> paths.add(p));
             return this;
         }
 
@@ -365,7 +365,7 @@ public class URIs {
             for (int i = 0 ; i < hosts.size(); i++) {
                 Tuple2<String, Integer> tuple = hosts.get(i);
                 sb.append(translate(tuple.v1(), charset, Action.ENCODE));
-                if (null != tuple.v2()) sb.append(COLON).append(tuple.v2);
+                if (null != tuple.v2()) sb.append(COLON).append(tuple.v2());
                 if (i != hosts.size() - 1) sb.append(COMMA);
             }
             if (paths.size() > 0) {

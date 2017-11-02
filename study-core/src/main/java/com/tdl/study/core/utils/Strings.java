@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 public class Strings {
 
-    public static boolean empty(String string) {
+    public static boolean isEmpty(String string) {
         return null == string || string.isEmpty();
     }
 
