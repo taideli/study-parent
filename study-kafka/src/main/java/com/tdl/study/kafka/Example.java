@@ -13,6 +13,8 @@ import java.util.concurrent.TimeUnit;
 
 public class Example {
 
+    static String TOPIC = "qaz";
+
     public static void main(String[] args) {
 //        new Thread(Example::producer, "producer").start();
 //        new Thread(Example::consumer, "consumer").start();
@@ -32,11 +34,10 @@ public class Example {
 
         Producer<String, String> producer = new KafkaProducer<>(props);
         for(int i = 0; i < 10; i++) {
-            producer.send(new ProducerRecord<String, String>("qaz", Integer.toString(i)));
+            producer.send(new ProducerRecord<String, String>(TOPIC, Integer.toString(i)));
             System.out.println("send:" + i);
         }
         producer.close();
-        System.out.println((9223372036854775807L / 1000 / 3600));
     }
 
     static void consumer() {
@@ -49,11 +50,12 @@ public class Example {
         props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
 //        consumer.subscribe(Arrays.asList("foo", "bar"));
-        consumer.subscribe(Arrays.asList("topic"));
+        consumer.subscribe(Arrays.asList(TOPIC));
         while (true) {
             ConsumerRecords<String, String> records = consumer.poll(100);
             for (ConsumerRecord<String, String> record : records)
                 System.out.printf("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
         }
+//        consumer.close();
     }
 }

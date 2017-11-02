@@ -1,4 +1,4 @@
-package com.tdl.study.kafka.test.config;
+package com.tdl.study.kafka.test;
 
 import com.tdl.study.core.utils.URIs;
 import com.tdl.study.kafka.io.KafkaConfig;
