@@ -1,8 +1,8 @@
 package com.tdl.study.core.conf;
 
 import com.tdl.study.core.utils.IOs;
+import com.tdl.study.core.utils.Strings;
 import com.tdl.study.core.utils.Systems;
-import com.tdl.study.core.utils.Texts;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -157,7 +157,7 @@ public class Configs {
         }
 
         public String get(String priority, String key, String... defaults) {
-            return Texts.isEmpty(priority) ? configs.getOrDefault(prefixedKey(key), first(defaults)) : priority;
+            return Strings.isEmpty(priority) ? configs.getOrDefault(prefixedKey(key), first(defaults)) : priority;
         }
 
         public Map<String, String> map() {
