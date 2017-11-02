@@ -11,7 +11,8 @@ import java.util.stream.Stream;
 
 /**
  * the URIs defines a connection to a resource
- * a uri contains some fields :
+ * <br/>schema://username:password@host1:port1,host2:port2/path1/path2?param1=value1&param2=value2#fragment
+ * <br/>a uri contains some fields :
  * <br/>schema - required
  * <br/>username - optional
  * <br/>password - optional
@@ -95,7 +96,7 @@ public class URIs {
 
         // parse host and port
         locator = SLASH;
-        String[] hostsAndPaths = remain.split(SLASH, 2);
+        String[] hostsAndPaths = remain.split(locator, 2);
         parseHostAndPort(hostsAndPaths[0]);
         String paths = hostsAndPaths.length < 2 ? null : hostsAndPaths[1];
         parsePaths(paths);
@@ -117,7 +118,7 @@ public class URIs {
     private void parseAuthority(String authority) throws UnsupportedEncodingException {
         if (Strings.empty(authority)) return;
         String[] up = authority.split(COLON, 2);
-        username = translate(up[0], charset, Action.DECODE);
+        username = Strings.empty(up[0]) ? null : translate(up[0], charset, Action.DECODE);
         password = up.length < 2 ? null : translate(up[1], charset, Action.DECODE);
     }
 
@@ -352,11 +353,15 @@ public class URIs {
         public URIs build(String charset) {
             StringBuilder sb = new StringBuilder();
             sb.append(translate(schema, charset, Action.ENCODE)).append(COLON).append(SLASH).append(SLASH);
-            if (null != username) {
+            /*if (null != username) {
                 sb.append(translate(username, charset, Action.ENCODE));
                 if (null != password) sb.append(COLON).append(translate(password, charset, Action.ENCODE));
                 sb.append(AT);
-            }
+            }*/
+            if (null != username) sb.append(translate(username, charset, Action.ENCODE));
+            if (null != password) sb.append(COLON).append(translate(password, charset, Action.ENCODE));
+            if (null != username || null != password) sb.append(AT);
+
             for (int i = 0 ; i < hosts.size(); i++) {
                 Tuple2<String, Integer> tuple = hosts.get(i);
                 sb.append(translate(tuple.v1(), charset, Action.ENCODE));

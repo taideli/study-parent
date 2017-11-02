@@ -8,7 +8,7 @@ public class URIsTest {
     public static void main(String[] args) throws UnsupportedEncodingException {
         URIs uri = URIs.builder()
                 .schema("elastic search")
-                .username("jdbcd%")
+//                .username("jdbcd%")
                 .password("!@DWE%$#dfg543")
                 .host("172.16.16.232", null)
                 .host("172.16.16.233", 1234)
@@ -22,6 +22,9 @@ public class URIsTest {
                 .path("dest")
                 .fragment("DESCRIPTION")
                 .build();
+
+        System.out.println("[" + uri.getUsername() + "]");
+        System.out.println("[" + uri.getPassword() + "]");
 
         System.out.println(uri.toString(true));
         System.out.println(uri.toString(false));
