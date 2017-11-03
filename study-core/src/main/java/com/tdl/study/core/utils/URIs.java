@@ -207,8 +207,8 @@ public class URIs {
         return new HashMap<>(parameters);
     }
 
-    public String getParameter(String key) {
-        return parameters.get(key);
+    public String getParameter(String key, String... def) {
+        return parameters.getOrDefault(key, (null != def && def.length > 0) ? def[0] : null);
     }
 
     public String getParametersAsString() {
@@ -248,11 +248,11 @@ public class URIs {
 
     /**
      * URIs string value
-     * @param encoded
-     * @return true - string with url encoded, false - url decoded
+     * @param decoded
+     * @return true - string with url decoded, false - url encoded
      */
-    public String toString(boolean encoded) {
-        return encoded ? buildString(Action.ENCODE) : buildString(Action.DO_NOTHING);
+    public String toString(boolean decoded) {
+        return decoded ? buildString(Action.DO_NOTHING) : buildString(Action.ENCODE);
     }
     
     private String buildString(Action action) {

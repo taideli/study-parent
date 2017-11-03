@@ -26,6 +26,7 @@ public class URIsTest {
         System.out.println("[" + uri.getUsername() + "]");
         System.out.println("[" + uri.getPassword() + "]");
 
+        System.out.println(uri);
         System.out.println(uri.toString(true));
         System.out.println(uri.toString(false));
     }
