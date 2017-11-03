@@ -4,13 +4,16 @@ import com.tdl.study.core.utils.URIs;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.config.AbstractConfig;
+import org.apache.kafka.common.serialization.ByteArrayDeserializer;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
+import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serializer;
 
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -23,6 +26,9 @@ public final class KafkaConfig {
 
     public static final Class<? extends Serializer> DEFAULT_KEY_SERIALIZER_CLASS = ByteArraySerializer.class;
     public static final Class<? extends Serializer> DEFAULT_VALUE_SERIALIZER_CLASS = ByteArraySerializer.class;
+    public static final Class<? extends Deserializer> DEFAULT_KEY_DESERIALIZER_CLASS = ByteArrayDeserializer.class;
+    public static final Class<? extends Deserializer> DEFAULT_VALUE_DESERIALIZER_CLASS = ByteArrayDeserializer.class;
+    public static final String DEFAULT_GROUP_ID = UUID.randomUUID().toString();
     public static final int DEFAULT_RETRIES_CONFIG = 3;
 
     /**
@@ -49,6 +55,9 @@ public final class KafkaConfig {
     /**
      * fetch consumer properties from {@link URIs} query, the standard key defined at {@link ConsumerConfig} <br/>
      * the key {@link ConsumerConfig#BOOTSTRAP_SERVERS_CONFIG} fetch from uri's host
+     * <br/>the default {@link ConsumerConfig#KEY_DESERIALIZER_CLASS_CONFIG} is {@link ByteArrayDeserializer}
+     * <br/>the default {@link ConsumerConfig#VALUE_DESERIALIZER_CLASS_CONFIG} is {@link ByteArrayDeserializer}
+     * <br/>the default {@link ConsumerConfig#GROUP_ID_CONFIG} is {@link UUID#randomUUID()}{@link UUID#toString()}
      * @param uri the uri as source
      * @return properties with standard key and value form uris query
      */
@@ -58,6 +67,9 @@ public final class KafkaConfig {
             if (CONSUMER_CONFIG_KEYS.contains(k)) properties.put(k, v);
         });
         properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, uri.getHostsAsString());
+        properties.putIfAbsent(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, DEFAULT_KEY_DESERIALIZER_CLASS);
+        properties.putIfAbsent(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, DEFAULT_VALUE_DESERIALIZER_CLASS);
+        properties.putIfAbsent(ConsumerConfig.GROUP_ID_CONFIG, DEFAULT_GROUP_ID);
         return properties;
     }
 

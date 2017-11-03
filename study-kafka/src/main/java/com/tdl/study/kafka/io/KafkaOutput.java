@@ -9,6 +9,9 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 
 import java.util.Properties;
 
+/**
+ * kafka://topic@host1:9092[,host2:9092]?k1=v1&k2=v2[&k3=v3]
+ */
 public class KafkaOutput extends OutputImpl<ProducerRecord<byte[], byte[]>> {
     private Producer<byte[], byte[]> producer;
 

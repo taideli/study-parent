@@ -19,7 +19,6 @@ public class KafkaOutputTest {
                 .schema("kafka")
 //                .username("tdl-topic-3")
                 .username("qaz")
-                .password("qaz")
                 .host("172.16.16.232", 9092)
 //                .parameter(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, KafkaConfig.DEFAULT_KEY_SERIALIZER_CLASS)
 //                .parameter(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaConfig.DEFAULT_VALUE_SERIALIZER_CLASS)
