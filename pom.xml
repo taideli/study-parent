@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>study-calcite</module>
         <module>study-core</module>
         <module>study-hbase</module>
         <module>study-elasticsearch</module>
