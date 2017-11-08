@@ -1,0 +1,2 @@
+定义一个SchemaFactory
+定义一个TableFactory
