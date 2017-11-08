@@ -16,7 +16,8 @@ public class Main {
 
     public static void main(String[] args) throws SqlParseException {
 
-        String sql = "SELECT group_concat(l.zjhm) AS zzjhm,\n" +
+        String sql =
+                "SELECT group_concat(l.zjhm) AS zzjhm,\n" +
                 "       concat(l.lgdm,l.rzday) AS flag\n" +
                 "FROM\n" +
                 "  (SELECT w.ZJHM,\n" +
