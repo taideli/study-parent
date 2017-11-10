@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 
 /**
  * the URIs defines a connection to a resource
+ * <br/>@see  <a href=http://blog.csdn.net/joe_007/article/details/7939471>CSDN URI</a>
  * <br/>schema://username:password@host1:port1,host2:port2/path1/path2?param1=value1&param2=value2#fragment
  * <br/>a uri contains some fields :
  * <br/>schema - required
