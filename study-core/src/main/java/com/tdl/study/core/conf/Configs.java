@@ -40,8 +40,6 @@ public final class Configs {
          */
         String prefix() default "";
 
-        boolean ignoreInvalidFields() default false;
-
         boolean ignoreSystemFields() default false;
     }
 
@@ -51,14 +49,14 @@ public final class Configs {
 
     private static void init(Class<?> clazz) {
         Config config = clazz.getAnnotation(Config.class);
-        if (null != config) init(clazz, config.value(), config.prefix());
+        if (null != config) init(clazz, config.value(), config.prefix(), config.ignoreSystemFields());
     }
 
-    private static void init(Class<?> clazz, String filename, String prefix) {
+    private static void init(Class<?> clazz, String filename, String prefix, boolean ignoreSystemFields) {
         Configs.prefix = prefix.replaceAll("\\.$", "");
         instance = new ConcurrentHashMap<>();
         /** 1. 加载系统属性 */
-        fill(instance, Configs::systemPrefix, mapProp(System.getProperties()));
+        fill(instance, key -> (systemPrefix(key) && ignoreSystemFields) || validPrefix(Configs.prefix, key), mapProp(System.getProperties()));
         /** 2. 加载配置文件属性*/
 //        String path = clazz.getProtectionDomain().getCodeSource().getLocation().getPath();
         String extension = ".properties";
@@ -67,8 +65,8 @@ public final class Configs {
         try (InputStream cis = IOs.openInClasspath(clazz, filename)) {
             if (!fill(instance, null, cis)) try (InputStream dis = IOs.openInCurrentDir(filename)) {
                 if (!fill(instance, null, dis)) throw new FileNotFoundException(filename);
-                else System.out.println("load from " + Paths.get("").toAbsolutePath().toString());
-            } else System.out.println("load from classpath");
+                else log.info("load from " + Paths.get("").toAbsolutePath().toString());
+            } else log.info("load from classpath");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
