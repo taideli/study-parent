@@ -1,5 +1,6 @@
 package com.tdl.study.core.conf;
 
+import com.tdl.study.core.log.Logger;
 import com.tdl.study.core.utils.IOs;
 import com.tdl.study.core.utils.Strings;
 import com.tdl.study.core.utils.Systems;
@@ -14,13 +15,17 @@ import java.lang.annotation.Target;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
-public class Configs {
+public final class Configs {
 
-//    private static final Logger log = Logger.getLogger(Configs.class);
-    private static final Conf config = init();
-    private static final String SYSTEM_CONFIG_FILE_EXTENSION = "com.tdl.study.core.conf.extension";
+    private static final Pattern pattern = Pattern.compile("([a-zA-z0-9]+([.][a-zA-Z0-9]+)*)=([^\\s]+)(\\s+[#]\\s*(.*))?");
+    private static final Logger log = Logger.getLogger(Configs.class);
+//    private static final Conf config = init();
+    private static ConcurrentHashMap<String, String> instance;
+    private static String prefix;
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.TYPE)
@@ -40,34 +45,33 @@ public class Configs {
         boolean ignoreSystemFields() default false;
     }
 
-    private static Conf init() {
-        return init(Systems.getMainClass());
+    private static void init() {
+        init(Systems.getMainClass());
     }
 
-    private static Conf init(Class<?> clazz) {
+    private static void init(Class<?> clazz) {
         Config config = clazz.getAnnotation(Config.class);
-        return null != config ? init(clazz, config.value(), config.prefix()) : null;
+        if (null != config) init(clazz, config.value(), config.prefix());
     }
 
-    private static Conf init(Class<?> clazz, String filename, String prefix) {
-        Map<String, String> settings = new HashMap<>();
-
+    private static void init(Class<?> clazz, String filename, String prefix) {
+        Configs.prefix = prefix.replaceAll("\\.$", "");
+        instance = new ConcurrentHashMap<>();
         /** 1. 加载系统属性 */
-        fill(settings, Configs::systemPrefix, mapProp(System.getProperties()));
+        fill(instance, Configs::systemPrefix, mapProp(System.getProperties()));
         /** 2. 加载配置文件属性*/
 //        String path = clazz.getProtectionDomain().getCodeSource().getLocation().getPath();
-        String extension = defaultConfFileExtension();
+        String extension = ".properties";
         if (!filename.endsWith(extension)) filename = filename + extension;
         // 优先级 先从classPath下找，找不到则从jar包中找 再找不到从当前目录找
         try (InputStream cis = IOs.openInClasspath(clazz, filename)) {
-            if (!fill(settings, null, cis)) try (InputStream dis = IOs.openInCurrentDir(filename)) {
-                if (!fill(settings, null, dis)) throw new FileNotFoundException(filename);
+            if (!fill(instance, null, cis)) try (InputStream dis = IOs.openInCurrentDir(filename)) {
+                if (!fill(instance, null, dis)) throw new FileNotFoundException(filename);
                 else System.out.println("load from " + Paths.get("").toAbsolutePath().toString());
             } else System.out.println("load from classpath");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return new Conf(prefix, settings);
     }
 
     private static boolean systemPrefix(String key) {
@@ -109,67 +113,29 @@ public class Configs {
         return true;
     }
 
-    private static String defaultConfFileExtension() {
-        return "." + System.getProperty(SYSTEM_CONFIG_FILE_EXTENSION, "properties").replaceFirst("^\\.", "");
-    }
-
     public static Map<String, String> map() {
-        return config.map();
+        if (null == instance) init();
+        return new ConcurrentHashMap<>(instance);
     }
 
-    public static boolean has(String key) {
-        return config.has(key);
+    public static boolean containsKey(String key) {
+        if (null == instance) init();
+        return instance.containsKey(prefixedKey(key));
     }
 
-    public static String get(String key) {
-        return get(key, (String[]) null);
+    public static boolean contains(String value) {
+        if (null == instance) init();
+        return instance.contains(value);
     }
 
     public static String get(String key, String... defaults) {
-        return get(null, key, defaults);
+        if (null == instance) init();
+        String value = instance.get(prefixedKey(key));
+        return null == value ? defaults[0] : value;
     }
 
-    public static String getp(String priority, String key) {
-        return get(priority, key, (String[]) null);
+    private static String prefixedKey(String key) {
+        return Strings.isEmpty(prefix) ? key : prefix + "." + key;
     }
 
-    private static String get(String priority, String key, String... defaults) {
-        return config.get(priority, key, defaults);
-    }
-
-    public static final class Conf {
-        private final Path file;
-        private final String prefix;
-        private final Map<String, String> configs;
-
-        Conf(String prefix, Map<String, String> configs) {
-            if (null == prefix || prefix.length() == 0) this.prefix = "";
-            else {
-                if (!prefix.endsWith(".")) prefix = prefix + ".";
-                this.prefix = prefix;
-            }
-            this.file = null;
-            this.configs = configs;
-        }
-
-        String prefixedKey(String key) {
-            return prefix + key;
-        }
-
-        public String get(String priority, String key, String... defaults) {
-            return Strings.isEmpty(priority) ? configs.getOrDefault(prefixedKey(key), first(defaults)) : priority;
-        }
-
-        public Map<String, String> map() {
-            return new HashMap<>(configs);
-        }
-
-        private static String first(String... defaults) {
-            return null == defaults || defaults.length == 0 ? null : defaults[0];
-        }
-
-        boolean has(String key) {
-            return configs.containsKey(prefixedKey(key));
-        }
-    }
 }
