@@ -3,18 +3,21 @@ package com.tdl.study.core.utils;
 public class Systems {
 
     public static Class<?> getMainClass() {
-        String name = System.getProperty("sun.java.command");
-        if (null != name) try {
-            return Class.forName(name);
-        } catch (ClassNotFoundException ignored) {}
+        try {
+            StackTraceElement[] stackTrace = new RuntimeException().getStackTrace();
+            for (StackTraceElement stackTraceElement : stackTrace) {
+                if ("main".equals(stackTraceElement.getMethodName())) {
+                    return Class.forName(stackTraceElement.getClassName());
+                }
+            }
+        }
+        catch (ClassNotFoundException ex) {
+            // Swallow and continue
+        }
         return null;
     }
 
     public static void main(String[] args) {
-        System.getProperties().forEach((o1, o2) -> {
-            System.out.println(o1 + "<===>" + o2);
-        });
-
-        System.out.println("exec.mainClass=" + System.getProperty("exec.mainClass"));
+        System.out.println("main class=" + Systems.getMainClass());
     }
 }
