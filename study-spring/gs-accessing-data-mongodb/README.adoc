@@ -1,0 +1,41 @@
+Study *`SPRING-JPA-02`*
+It's a simple of spring jpa, the url is :
+https://spring.io/guides/gs/accessing-data-mongodb/
+
+can run as a single application:
+`java -jar target\gs-accessing-data-mongodb-0.1.0.jar`
+
+the doc is in
+`https://docs.spring.io/spring-data/mongodb/docs/current/reference/html/`
+
+thd pdf version doc is
+`https://docs.spring.io/spring-data/mongodb/docs/current/reference/pdf/spring-data-mongodb-reference.pdf`
+
+
+
+= AsciiDoc is Writing Zen
+Doc Writer <doc.writer@example.com>
+:icons: font
+
+_Zen_ in the *art* of writion `plain text `with
+http://asciidoc.org[AsciiDoc]
+
+
+.Sample document
+====
+Here's a sample AsciiDoc document:
+[listing]
+....
+= Title of Document
+Doc Writer
+:toc:
+This guide provides...
+....
+The document header is useful, but not required.
+====
+
+
+*dfasdfsdf*
+[line-through]#dsfsdfsfewfwefwf#
+
+x^3^

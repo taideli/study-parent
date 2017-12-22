@@ -1,0 +1,8 @@
+Study *`SPRING-JPA-01`*
+It's a simple of spring jpa, the url is :
+https://spring.io/guides/gs/accessing-data-jpa/
+
+can run as a single application:
+`java -jar target\gs-accessing-data-jpa-0.1.0.jar`
+
+

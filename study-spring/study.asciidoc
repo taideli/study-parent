@@ -1,0 +1,26 @@
+
+= Spring 学习记录
+
+== 应用配置文件
+spring 会依次从如下目录加载 `application.properties`(or `application.yml`)文件到Spring Environment
+
+.优先级
+----
+1 当前目录下的config子目录
+2 当前目录(程序运行目录)
+3 config包内
+4 classpath根目录
+----
+
+可以通过 命令行参数(`--spring.config.name`)指定配置文件名
+[source,shell]
+----
+java -jar myproject.jar --spring.config.name=myproject
+java -jar myproject.jar --spring.config.location=classpath:/default.properties,classpath:/
+override.properties
+----
+
+
+
+http://blog.didispace.com/springbootproperties/[Spring Boot属性配置文件详解]
+
