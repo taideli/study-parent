@@ -12,7 +12,6 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,7 +20,7 @@ import java.util.regex.Pattern;
 
 public final class Configs {
 
-    private static final Pattern pattern = Pattern.compile("([a-zA-z0-9]+([.][a-zA-Z0-9]+)*)=([^\\s]+)(\\s+[#]\\s*(.*))?");
+    private static final Pattern pattern = Pattern.compile("(^[a-zA-z0-9]+([.][a-zA-Z0-9]+)*)=([^\\s]+)(\\s+[#]\\s*(.*))?");
     private static final Logger log = Logger.getLogger(Configs.class);
 //    private static final Conf config = init();
     private static ConcurrentHashMap<String, String> instance;
@@ -134,6 +133,12 @@ public final class Configs {
 
     private static String prefixedKey(String key) {
         return Strings.isEmpty(prefix) ? key : prefix + "." + key;
+    }
+
+    private static InputStream fetchConfigFileInputStream(Class<?> clazz, String filename) {
+        // 1. 从 classpath中找
+
+        return null;
     }
 
 }
