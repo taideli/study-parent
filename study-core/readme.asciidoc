@@ -1,0 +1,32 @@
+study-core 相关规范
+
+# Config
+可以通过系统参数`-Dtdl.config.filename`强行指定(或更改)配置文件名
+可以通过在配置文件(app.properties)中指定tdl.config.profile=dev来指示激活配置文件(app-dev.properties)
+可以通过在配置文件中指定tdl.config.import.1(2)=xxx.properties导入其它配置文件
+
+配置文件加载顺序：
+1. 从classpath中查找
+2. 从主jar包所在目录查找
+3. 从当前目录查找
+4. 从主程序jar包中查找
+
+配置文件中每一行为一条配置
+一条配置包含配置项名、配置项值、配置注释(可选)
+
+配置引用支持：
+${a.b.c} 不分出现顺序。
+
+随机值支持：
+${uuid}
+${random.string[0,9]} 随机字符串[0-9a-zA-Z],长度[0-9],长度为0时，生成null
+${random.int}
+${random.int[10,20]}
+${random.long}
+${random.long[10,20]}
+
+spring.web.port=${random.int[10, 20]}
+kafka.uri=zk://${random.string[0-9]}:@hzga137:2181/kafka
+
+
+# URIs
