@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 
 public final class Configs {
 
-    private static final Pattern pattern = Pattern.compile("(^[a-zA-z0-9]+([.][a-zA-Z0-9]+)*)=([^\\s]+)(\\s+[#]\\s*(.*))?");
+    private static final Pattern pattern = Pattern.compile("(?<key>^[a-zA-z0-9]+([.][a-zA-Z0-9]+)*)=(?<value>[^\\s]+)(\\s+[#]\\s*(?<ann>.*))?");
     private static final Logger log = Logger.getLogger(Configs.class);
 //    private static final Conf config = init();
     private static ConcurrentHashMap<String, String> instance;

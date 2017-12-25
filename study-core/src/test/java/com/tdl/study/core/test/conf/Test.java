@@ -19,15 +19,18 @@ public class Test {
 //        String line = "tdl.config=application.properties  #         default file name abc";
 //        String line = "tdl.config=app.config";
 //        String line = "tdl.config=app.config# #sss";
-        String line = "tdl.config=zk://#fragment #aa";
-//        String line = "a=";
+//        String line = "tdl.config=zk://#fragment #  aa";
+        String line = "kafka.uri=zk://hzga134:2181,hzga135:2181/kafka/中文路径 #中文注释";
 //        Pattern key = Pattern.compile("([a-zA-z0-9]+([.][a-zA-Z0-9]+)*)=(.+)\\s+([#]\\s*(.*))+");
-        Pattern key = Pattern.compile("(^[a-zA-z0-9]+([.][a-zA-Z0-9]+)*)=([^\\s]+)(\\s+[#]\\s*(.*))?");
+        Pattern key = Pattern.compile("(?<key>^[a-zA-z0-9]+([.][a-zA-Z0-9]+)*)=(?<value>[^\\s]+)(\\s+[#]\\s*(?<annotation>.*))?");
         Matcher matcher = key.matcher(line);
         while (matcher.find()) {
-            String k = matcher.group(1);
+            /*String k = matcher.group(1);
             String v = matcher.group(3);
-            String a = matcher.group(5);
+            String a = matcher.group(5);*/
+            String k = matcher.group("key");
+            String v = matcher.group("value");
+            String a = matcher.group("annotation");
             System.out.println("key:" + k);
             System.out.println("value:" + v);
             System.out.println("annotation:" + a);
