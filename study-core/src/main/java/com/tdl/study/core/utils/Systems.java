@@ -11,10 +11,8 @@ public class Systems {
                 }
             }
         }
-        catch (ClassNotFoundException ex) {
-            // Swallow and continue
-        }
-        return null;
+        catch (ClassNotFoundException ignored) {}
+        throw new RuntimeException("can NOT get main class.");
     }
 
     public static void main(String[] args) {
