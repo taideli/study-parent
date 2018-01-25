@@ -18,4 +18,12 @@ public class Strings {
         if (null == values || values.size() == 0) return null;
         return values.stream().filter(s -> null != s && s.length() != 0).collect(Collectors.joining(delimiter));
     }
+
+    public static boolean isNumeric(String string) {
+        if (null == string || string.isEmpty()) return false;
+        for (int idx = 0; idx < string.length(); idx++) {
+            if (!Character.isDigit(string.charAt(idx))) return false;
+        }
+        return true;
+    }
 }
