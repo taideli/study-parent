@@ -2,8 +2,11 @@ study-core 相关规范
 
 # Config
 可以通过系统参数`-Dtdl.config.filename`强行指定(或更改)配置文件名
+
 可以通过在配置文件(app.properties)中指定tdl.config.profile=dev来指示激活配置文件(app-dev.properties)
+
 可以通过在配置文件中指定tdl.config.import.1(2)=xxx.properties导入其它配置文件
+
 
 配置文件加载顺序：
 1. 从classpath中查找
@@ -24,6 +27,7 @@ ${random.int}
 ${random.int[10,20]}
 ${random.long}
 ${random.long[10,20]}
+${random.double[12.3,22.5]}
 
 spring.web.port=${random.int[10, 20]}
 kafka.uri=zk://${random.string[0-9]}:@hzga137:2181/kafka
