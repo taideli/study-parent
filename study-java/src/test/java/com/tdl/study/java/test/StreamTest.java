@@ -12,13 +12,10 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.regex.Pattern;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.util.stream.Collectors.counting;
-
-public class CollectorsTest {
+public class StreamTest {
 
     @Test
     public void t1() {
@@ -269,6 +266,19 @@ public class CollectorsTest {
         System.out.println(ml);
     }
 
+    /**
+     * flatMap test
+     */
+    @Test
+    public void t19() {
+        List<List<Integer>> lists = Stream.iterate(0, i -> i + 1).limit(100)
+                .collect(Collectors.groupingBy(i -> i / 10)).values().stream().collect(Collectors.toList());
+        System.out.println(lists);
+
+        List<Integer> list = lists.stream().flatMap(Collection::stream).collect(Collectors.toList());
+        System.out.println(list);
+    }
+
     @Test
     public void ty() {
         double similarity = 0.123456789098803d;
@@ -276,5 +286,10 @@ public class CollectorsTest {
         String s = format.format(similarity);
         String r = s.substring(0, s.indexOf(".") + 4);
         System.out.println(r);
+    }
+
+    @Test
+    public void tt() {
+        Stream.of("2017", "2003", "2015").sorted((s1, s2) -> s2.compareTo(s1)).forEach(s -> System.out.println(s));
     }
 }
