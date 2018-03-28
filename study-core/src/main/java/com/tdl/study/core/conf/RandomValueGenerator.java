@@ -51,12 +51,15 @@ public abstract class RandomValueGenerator {
                     throw new RuntimeException("parameters of random.integer do NOT conform to the specifications");
                 }
             } else if (expression.startsWith("random.double")) {
-                if ("random.double".length() == expression.length()) return new RandomDoubleGenerator(0.0, Double.MAX_VALUE);
+                if ("random.double".length() == expression.length()) return new RandomDoubleGenerator(0.0, Double.MAX_VALUE, 1);
                 Matcher matcher = RANDOM_DOUBLE_PATTERN.matcher(expression);
                 if (matcher.find()) {
-                    double min = Double.valueOf(matcher.group("min"));
-                    double max = Double.valueOf(matcher.group("max"));
-                    return new RandomDoubleGenerator(min, max);
+                    String minString = matcher.group("min");
+                    String maxString = matcher.group("max");
+                    int decimalPartLen = Math.max(decimalPartLength(minString), decimalPartLength(maxString));
+                    double min = Double.valueOf(minString);
+                    double max = Double.valueOf(maxString);
+                    return new RandomDoubleGenerator(min, max, decimalPartLen);
                 } else {
                     throw new RuntimeException("parameters of random.integer do NOT conform to the specifications");
                 }
@@ -64,6 +67,12 @@ public abstract class RandomValueGenerator {
 
             }*/
             throw new RuntimeException("can NOT press expression: " + expression);
+        }
+
+        private static int decimalPartLength(String doubleString) {
+            if (null == doubleString) throw new IllegalArgumentException("null string has no decimal part");
+            String decimal = doubleString.replaceFirst("^.*\\.", "");
+            return decimal.length();
         }
     }
 }

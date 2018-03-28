@@ -26,7 +26,7 @@ public class Main {
 //        String str = "uuid";
 //        String str = "random.integer[1,50]";
 //        String str = "random.long[1,50564168464]";
-        String str = "random.double[1,50453558.0]"; // TODO: 2018/1/8 bugs
+        String str = "random.double[1.23,100.0]"; // TODO: 2018/1/8 bugs
 //        String str = "random.string[1,66]";
 
         int idx = 0;
