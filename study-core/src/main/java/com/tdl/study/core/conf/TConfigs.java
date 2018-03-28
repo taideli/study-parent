@@ -27,6 +27,7 @@ public class TConfigs {
     public static final String SYSTEM_PROPERTY_IGNORED = "tdl.config.ignored";
     public static final String CONFIG_FILE_PROFILE_KEY = "tdl.config.profile";
     public static final String CONFIG_FILE_IMPORT_KEY = "tdl.config.import";
+
     private static final Pattern pattern = Pattern.compile("(?<key>^[a-zA-z0-9]+([.][a-zA-Z0-9]+)*)=(?<value>[^\\s]+)(\\s+[#]\\s*(?<ann>.*))?");
 
 
@@ -204,4 +205,63 @@ public class TConfigs {
         return new HashMap<>(configs);
     }
 
+    // http://www.php.cn/java-article-361974.html
+    /*spring-core org.springframework.util.PropertyPlaceholderHelper*/
+    /*protected String parseStringValue(
+			String value, PlaceholderResolver placeholderResolver, Set<String> visitedPlaceholders) {
+
+		StringBuilder result = new StringBuilder(value);
+
+		int startIndex = value.indexOf(this.placeholderPrefix);
+		while (startIndex != -1) {
+			int endIndex = findPlaceholderEndIndex(result, startIndex);
+			if (endIndex != -1) {
+				String placeholder = result.substring(startIndex + this.placeholderPrefix.length(), endIndex);
+				String originalPlaceholder = placeholder;
+				if (!visitedPlaceholders.add(originalPlaceholder)) {
+					throw new IllegalArgumentException(
+							"Circular placeholder reference '" + originalPlaceholder + "' in property definitions");
+				}
+				// Recursive invocation, parsing placeholders contained in the placeholder key.
+				placeholder = parseStringValue(placeholder, placeholderResolver, visitedPlaceholders);
+				// Now obtain the value for the fully resolved key...
+				String propVal = placeholderResolver.resolvePlaceholder(placeholder);
+				if (propVal == null && this.valueSeparator != null) {
+					int separatorIndex = placeholder.indexOf(this.valueSeparator);
+					if (separatorIndex != -1) {
+						String actualPlaceholder = placeholder.substring(0, separatorIndex);
+						String defaultValue = placeholder.substring(separatorIndex + this.valueSeparator.length());
+						propVal = placeholderResolver.resolvePlaceholder(actualPlaceholder);
+						if (propVal == null) {
+							propVal = defaultValue;
+						}
+					}
+				}
+				if (propVal != null) {
+					// Recursive invocation, parsing placeholders contained in the
+					// previously resolved placeholder value.
+					propVal = parseStringValue(propVal, placeholderResolver, visitedPlaceholders);
+					result.replace(startIndex, endIndex + this.placeholderSuffix.length(), propVal);
+					if (logger.isTraceEnabled()) {
+						logger.trace("Resolved placeholder '" + placeholder + "'");
+					}
+					startIndex = result.indexOf(this.placeholderPrefix, startIndex + propVal.length());
+				}
+				else if (this.ignoreUnresolvablePlaceholders) {
+					// Proceed with unprocessed value.
+					startIndex = result.indexOf(this.placeholderPrefix, endIndex + this.placeholderSuffix.length());
+				}
+				else {
+					throw new IllegalArgumentException("Could not resolve placeholder '" +
+							placeholder + "'" + " in value \"" + value + "\"");
+				}
+				visitedPlaceholders.remove(originalPlaceholder);
+			}
+			else {
+				startIndex = -1;
+			}
+		}
+
+		return result.toString();
+	}*/
 }
