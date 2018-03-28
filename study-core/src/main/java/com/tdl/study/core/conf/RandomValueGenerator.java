@@ -48,7 +48,7 @@ public abstract class RandomValueGenerator {
                     long max = Long.valueOf(matcher.group("max"));
                     return new RandomLongGenerator(min, max);
                 } else {
-                    throw new RuntimeException("parameters of random.integer do NOT conform to the specifications");
+                    throw new RuntimeException("parameters of random.long do NOT conform to the specifications");
                 }
             } else if (expression.startsWith("random.double")) {
                 if ("random.double".length() == expression.length()) return new RandomDoubleGenerator(0.0, Double.MAX_VALUE, 1);
@@ -61,7 +61,7 @@ public abstract class RandomValueGenerator {
                     double max = Double.valueOf(maxString);
                     return new RandomDoubleGenerator(min, max, decimalPartLen);
                 } else {
-                    throw new RuntimeException("parameters of random.integer do NOT conform to the specifications");
+                    throw new RuntimeException("parameters of random.double do NOT conform to the specifications");
                 }
             }/* else if (expression.startsWith("random.float")) {
 
