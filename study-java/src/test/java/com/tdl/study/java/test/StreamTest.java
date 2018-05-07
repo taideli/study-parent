@@ -1,6 +1,5 @@
 package com.tdl.study.java.test;
 
-import org.apache.logging.log4j.util.Strings;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -48,7 +47,7 @@ public class StreamTest {
 
     private static Stream<String> letters(String string) {
         List<String> list = new ArrayList<>();
-        if (Strings.isEmpty(string)) return list.stream();
+        if (null == string) return list.stream();
         for (int i = 0; i < string.length(); i++) {
             list.add(String.valueOf(string.charAt(i)));
         }
