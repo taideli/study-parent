@@ -11,5 +11,7 @@ public class HadoopTest {
         for (int i = 0; i < sArrary.length; i++) {
             System.out.println("`" + sArrary[i] + "`");
         }
+        String[] aa = new String[]{"a", "b", "c"};
+        System.out.println(aa.getClass());
     }
 }

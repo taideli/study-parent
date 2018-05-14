@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+@Deprecated
 public class UrlCat {
 
     static {
@@ -16,8 +17,8 @@ public class UrlCat {
 
     /**
      * 测试方法,这个方法不推荐
-     * hadoop jar ./libs/study-hdfs-1.0.jar com.tdl.study.hdfs.pkg2.urlcat.UrlCat hdfs:/anaconda-ks.cfg
-     * @param args
+     * hadoop jar study-hadoop-1.0.jar com.tdl.study.hadoop.hdfs.UrlCat hdfs:/user/hadoop_fs_help.txt
+     * @param args url
      * @throws IOException
      */
     public static void main(String args[]) throws IOException {
