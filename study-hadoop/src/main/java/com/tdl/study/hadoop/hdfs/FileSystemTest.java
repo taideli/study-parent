@@ -3,8 +3,8 @@ package com.tdl.study.hadoop.hdfs;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.*;
 import org.apache.hadoop.io.IOUtils;
-import org.apache.hadoop.io.compress.CompressionCodec;
-import org.apache.hadoop.io.compress.CompressionCodecFactory;
+import org.apache.hadoop.io.compress.*;
+import org.apache.hadoop.util.ReflectionUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -79,10 +79,11 @@ public class FileSystemTest {
 
     }
 
-    public void codec() {
+    public void compressionCodec() {
         String ipath = "/user/root/804570-99999-2001.op.gz";
         Path path = new Path(ipath);
         CompressionCodecFactory factory = new CompressionCodecFactory(conf);
+        // notes by Taideli@2018/5/14_18:57 根据拓展名查找压缩算法
         CompressionCodec codec = factory.getCodec(path);
         if (null == codec) {
             System.err.println("No codec found for " + path.toString());
@@ -94,6 +95,23 @@ public class FileSystemTest {
             IOUtils.copyBytes(is, os, conf);
         } catch (IOException e) {
             e.printStackTrace();
+            System.out.println(e);
+        }
+        System.out.println("codec: `" + opath + "` created.");
+    }
+
+    public void pooledStreamCompressor() throws Exception {
+        Class<?> codecClass = Class.forName("org.apache.hadoop.io.compress.SnappyCodec");
+        CompressionCodec codec = (CompressionCodec) ReflectionUtils.newInstance(codecClass, conf);
+        Compressor compressor = null;
+        try {
+            compressor = CodecPool.getCompressor(codec);
+            CompressionOutputStream out = codec.createOutputStream(System.out, compressor);
+            IOUtils.copyBytes(System.in, out, 4096, false);
+            out.flush();
+        } finally {
+            // notes by Taideli@2018/5/14_19:26 用完放回池中
+            CodecPool.returnCompressor(compressor);
         }
     }
 
