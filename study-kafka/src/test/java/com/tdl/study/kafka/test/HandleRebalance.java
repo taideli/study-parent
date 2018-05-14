@@ -38,8 +38,21 @@ public class HandleRebalance implements ConsumerRebalanceListener {
         Map<TopicPartition, OffsetAndMetadata> currentOffsets = new HashMap<>();
         Properties properties = KafkaConfig.getConsumerProperties(uri);
         KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(properties);
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            System.out.println("Starting exit....");
+            consumer.wakeup();
+            /*try {
+                mainThread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }*/
+        }));
         try {
             consumer.subscribe(Arrays.asList("topic_1"), new HandleRebalance());
+//            consumer.seekToBeginning();
+//            consumer.seekToEnd();
+//            consumer.seek();
             while (true) {
                 ConsumerRecords<String, String> records = consumer.poll(100);
                 for (ConsumerRecord<String, String> record : records) {
