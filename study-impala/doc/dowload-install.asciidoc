@@ -1,0 +1,11 @@
+http://archive.cloudera.com/cdh5/redhat/7/x86_64/cdh/5.8.3/RPMS/x86_64/
+
+impala-2.6.0+cdh5.8.3+0-1.cdh5.8.3.p0.7.el7.x86_64.rpm
+impala-catalog-2.6.0+cdh5.8.3+0-1.cdh5.8.3.p0.7.el7.x86_64.rpm
+impala-debuginfo-2.6.0+cdh5.8.3+0-1.cdh5.8.3.p0.7.el7.x86_64.rpm
+impala-server-2.6.0+cdh5.8.3+0-1.cdh5.8.3.p0.7.el7.x86_64.rpm
+impala-shell-2.6.0+cdh5.8.3+0-1.cdh5.8.3.p0.7.el7.x86_64.rpm
+impala-state-store-2.6.0+cdh5.8.3+0-1.cdh5.8.3.p0.7.el7.x86_64.rpm
+impala-udf-devel-2.6.0+cdh5.8.3+0-1.cdh5.8.3.p0.7.el7.x86_64.rpm
+
+
