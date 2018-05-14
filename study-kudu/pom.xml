@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>study-parent</artifactId>
+        <groupId>com.tdl.study</groupId>
+        <version>1.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>study-kudu</artifactId>
+
+    <!--kudu配置项-->
+    <!--http://kudu.apache.org/docs/configuration_reference.html-->
+    <!--kudu安装-->
+    <!--https://blog.csdn.net/mr_jack_xu/article/details/54018770-->
+    <!--kudu-windows-->
+    <!--http://whatua.com/2018/02/-->
+    <!--副本数默认为3，单机时要设置为1-->
+    <!--host要在两边都配置-->
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.kudu</groupId>
+            <artifactId>kudu-client</artifactId>
+            <version>1.7.0</version>
+            <!--<scope>test</scope>-->
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.25</version>
+        </dependency>
+
+    </dependencies>
+
+</project>
