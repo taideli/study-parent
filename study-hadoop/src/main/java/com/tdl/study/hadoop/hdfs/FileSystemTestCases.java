@@ -1,6 +1,6 @@
 package com.tdl.study.hadoop.hdfs;
 
-import com.tdl.study.hadoop.TestUtil;
+import com.tdl.study.hadoop.TestCases;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.*;
 import org.apache.hadoop.io.IOUtils;
@@ -15,11 +15,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.stream.Stream;
 
-public class FileSystemTest extends TestUtil {
+public class FileSystemTestCases extends TestCases {
     private Configuration conf = new Configuration();
     private FileSystem fs = FileSystem.newInstance(conf);
 
-    public FileSystemTest() throws IOException {
+    public FileSystemTestCases() throws IOException {
         super();
     }
 

@@ -1,6 +1,6 @@
 package com.tdl.study.hadoop.hdfs;
 
-import com.tdl.study.hadoop.TestUtil;
+import com.tdl.study.hadoop.TestCases;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -14,9 +14,9 @@ import java.util.Arrays;
 /**
  * 序列化的相关测试代码
  */
-public class Serialization extends TestUtil {
+public class SerializationTestCases extends TestCases {
 
-    public Serialization() {
+    public SerializationTestCases() {
         super();
     }
 

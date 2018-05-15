@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class TestUtil {
+public abstract class TestCases {
 
-    public TestUtil() {}
+    public TestCases() {}
 
     public static void main(String[] args) throws Exception {
 
@@ -18,8 +18,8 @@ public abstract class TestUtil {
         commands.remove(0); // remove param Jar name
         String mainClassName = commands.remove(0); // really class name
         Class<?> clazz = Class.forName(mainClassName);
-        if (!TestUtil.class.isAssignableFrom(clazz)) {
-            System.out.println("MAIN_CLASS `" + clazz.getName() + "` is not a `" + TestUtil.class.getName() + "`");
+        if (!TestCases.class.isAssignableFrom(clazz)) {
+            System.out.println("MAIN_CLASS `" + clazz.getName() + "` is not a `" + TestCases.class.getName() + "`");
             System.exit(1);
         }
         args = commands.toArray(new String[]{});
