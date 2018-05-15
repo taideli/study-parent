@@ -27,22 +27,14 @@ public abstract class TestUtil {
         List<Method> methods = methods(test);
         if (0 == args.length) {
             System.out.println("run all public non-parameter & non-value-return functions, total: " + methods.size());
-            for (Method method : methods) {
-                System.out.println("\n**************************************************" +
-                        "\n      invoking method: " + method.getName() +
-                        "\n**************************************************");
-                method.invoke(test);
-            }
+            for (Method method : methods) invoke(test, method);
         } else {
             for (String func : args) {
                 Method method = methods.stream().filter(m -> m.getName().equals(func)).findFirst().orElse(null);
                 if (null == method) {
-                    System.out.println("no such method that meeting the condition");
+                    System.out.println("no such method that meeting the name `" + func + "`");
                 } else {
-                    System.out.println("\n**************************************************" +
-                            "\n      invoking method: " + method.getName() +
-                            "\n**************************************************");
-                    method.invoke(test);
+                    invoke(test, method);
                 }
             }
         }
@@ -57,4 +49,23 @@ public abstract class TestUtil {
                 .collect(Collectors.toList());
     }
 
+    private static void invoke(Object o, Method method) throws Exception {
+        if (null == o || null == method) return;
+        String m = method.getName();
+        int rectX = 70;
+        String stars = Stream.generate(() -> "*").limit(rectX).collect(Collectors.joining(""));
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n");
+        sb.append(stars);
+        sb.append("\n*");
+        int whiteX = rectX - m.length() - 2;
+        int frontWhiteX = whiteX / 2;
+        sb.append(Stream.generate(() -> " ").limit(frontWhiteX).collect(Collectors.joining("")));
+        sb.append(m);
+        sb.append(Stream.generate(() -> " ").limit(whiteX - frontWhiteX).collect(Collectors.joining("")));
+        sb.append("*\n");
+        sb.append(stars);
+        System.out.println(sb.toString());
+        method.invoke(o);
+    }
 }
