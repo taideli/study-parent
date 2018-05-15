@@ -1,5 +1,6 @@
 package com.tdl.study.hadoop.hdfs;
 
+import com.tdl.study.hadoop.TestUtil;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.*;
 import org.apache.hadoop.io.IOUtils;
@@ -10,21 +11,17 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class FileSystemTest {
+public class FileSystemTest extends TestUtil {
     private Configuration conf = new Configuration();
     private FileSystem fs = FileSystem.newInstance(conf);
 
-    private FileSystemTest() throws IOException {}
+    public FileSystemTest() throws IOException {
+        super();
+    }
 
     public void listStatus() throws IOException {
 
@@ -115,44 +112,4 @@ public class FileSystemTest {
         }
     }
 
-
-
-
-
-
-    public static void main(String args[]) throws InvocationTargetException, IllegalAccessException, IOException {
-        FileSystemTest test = new FileSystemTest();
-        List<Method> methods = methods(test);
-        if (0 == args.length) {
-            System.out.println("run all public non-parameter & non-value-return functions, total: " + methods.size());
-            for (Method method : methods) {
-                System.out.println("\n**************************************************" +
-                                   "\n      invoking method: " + method.getName() +
-                                   "\n**************************************************");
-                method.invoke(test);
-            }
-        } else {
-            for (String func : args) {
-                Method method = methods.stream().filter(m -> m.getName().equals(func)).findFirst().orElse(null);
-                if (null == method) {
-                    System.out.println("no such method that meeting the condition");
-                } else {
-                    System.out.println("\n**************************************************" +
-                                       "\n      invoking method: " + method.getName() +
-                                       "\n**************************************************");
-                    method.invoke(test);
-                }
-            }
-        }
-
-    }
-
-    private static List<Method> methods(Object object) {
-        if (null == object) return new ArrayList<>();
-        return Stream.of(object.getClass().getDeclaredMethods())
-                .filter(method -> Modifier.isPublic(method.getModifiers()))
-                .filter(method -> method.getParameterCount() == 0)
-                .filter(method -> method.getReturnType() == Void.TYPE)
-                .collect(Collectors.toList());
-    }
 }
