@@ -1,9 +1,7 @@
-package com.tdl.study.hadoop.weatcher;
+package com.tdl.study.hadoop.weather;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class Record {
     public static final DateFormat sdf = new SimpleDateFormat("yyyyMMdd");

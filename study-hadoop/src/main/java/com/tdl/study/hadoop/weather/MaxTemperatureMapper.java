@@ -1,4 +1,4 @@
-package com.tdl.study.hadoop.weatcher;
+package com.tdl.study.hadoop.weather;
 
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
