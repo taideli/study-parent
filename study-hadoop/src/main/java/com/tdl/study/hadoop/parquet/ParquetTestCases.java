@@ -13,11 +13,11 @@ import org.apache.parquet.hadoop.ParquetWriter;
 import org.apache.parquet.hadoop.example.GroupReadSupport;
 import org.apache.parquet.hadoop.example.GroupWriteSupport;
 import org.apache.parquet.io.api.Binary;
-import org.apache.parquet.schema.GroupType;
-import org.apache.parquet.schema.MessageType;
-import org.apache.parquet.schema.MessageTypeParser;
+import org.apache.parquet.schema.*;
 
 import java.io.IOException;
+
+import static org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName.*;
 
 public class ParquetTestCases extends TestCases {
     private Configuration conf;
@@ -25,6 +25,16 @@ public class ParquetTestCases extends TestCases {
     public ParquetTestCases() {
         super();
         conf = new Configuration();
+    }
+
+    public void schema() {
+        MessageType schema = new MessageType("Pair",
+                Types.required(BINARY).as(OriginalType.UTF8).named("left"),
+                Types.required(BINARY).as(OriginalType.UTF8).named("right"),
+                Types.optional(BINARY).as(OriginalType.ENUM).named("t1")
+        );
+
+        System.out.println(schema);
     }
 
     public void simpleWrite() throws IOException {
