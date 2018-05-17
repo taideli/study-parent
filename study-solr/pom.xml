@@ -11,10 +11,6 @@
 
     <artifactId>study-solr</artifactId>
 
-    <properties>
-        <solr.version>6.6.1</solr.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.apache.solr</groupId>

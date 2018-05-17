@@ -13,16 +13,12 @@
     <artifactId>study-mongo</artifactId>
     <packaging>jar</packaging>
 
-    <properties>
-        <mongodb.version>3.5.0</mongodb.version>
-    </properties>
-
     <dependencies>
 
         <dependency>
             <groupId>com.tdl.study</groupId>
             <artifactId>study-core</artifactId>
-            <version>1.0</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>

@@ -10,20 +10,22 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>study-calcite</module>
         <module>study-core</module>
         <module>study-hbase</module>
         <module>study-elasticsearch</module>
         <module>study-hadoop</module>
         <module>study-java</module>
-        <!--<module>study-jetty</module>-->
+        <module>study-jetty</module>
         <module>study-kafka</module>
         <module>study-mongo</module>
-        <!--<module>study-netty</module>-->
         <module>study-scala</module>
         <module>study-spark</module>
-        <module>study-spring</module>
+        <!--<module>study-spring</module>-->
         <module>study-tools</module>
+        <module>study-kudu</module>
+        <module>study-impala</module>
+        <module>study-expression</module>
+        <module>study-solr</module>
         <module>study-zk</module>
     </modules>
 
@@ -33,12 +35,15 @@
         <java.version>1.8</java.version>
         <scala.version>2.11.8</scala.version>
         <scala.binary.version>2.11</scala.binary.version>
-        <hadoop.version>2.7.3</hadoop.version>
-        <parquet.version>1.7.0</parquet.version>
+        <elasticsearch.version>5.2.0</elasticsearch.version>
+        <hadoop.version>2.8.3</hadoop.version>
+        <parquet.version>1.8.2</parquet.version> <!--match parquet version in spark 2.3.0-->
         <hbase.version>1.3.1</hbase.version>
-        <spark.version>2.0.0</spark.version>
+        <spark.version>2.3.0</spark.version>
         <kafka.version>0.10.2.1</kafka.version>
-        <netty.version>4.1.9.Final</netty.version>
+        <kudu.version>1.7.0</kudu.version>
+        <mongodb.version>3.5.0</mongodb.version>
+        <solr.version>6.6.1</solr.version>
         <zookeeper.version>3.4.9</zookeeper.version>
         <junit.version>4.12</junit.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -47,30 +52,29 @@
     </properties>
 
     <dependencies>
-        <dependency>
+        <!--<dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j-api.version}</version>
-        </dependency>
+        </dependency>-->
 
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>${slf4j-api.version}</version>
-            <!--<scope>test</scope>-->
+            <version>[${slf4j-api.version}, ]</version>
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
             <version>${log4j.version}</version>
-        </dependency>
-
+        </dependency>-->
 
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

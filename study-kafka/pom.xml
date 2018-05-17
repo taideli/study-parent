@@ -13,16 +13,12 @@
     <artifactId>study-kafka</artifactId>
     <packaging>jar</packaging>
 
-    <properties>
-        <study-core.version>1.0</study-core.version>
-    </properties>
-
     <dependencies>
 
         <dependency>
             <groupId>com.tdl.study</groupId>
             <artifactId>study-core</artifactId>
-            <version>${study-core.version}</version>
+            <version>${project.version}</version>
         </dependency>
 
 <!--        <dependency>

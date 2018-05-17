@@ -96,9 +96,9 @@
                     <scalaCompatVersion>${scala.binary.version}</scalaCompatVersion>
                     <javacArgs>
                         <javacArg>-source</javacArg>
-                        <javacArg>1.8</javacArg>
+                        <javacArg>${maven.compiler.source}</javacArg>
                         <javacArg>-target</javacArg>
-                        <javacArg>1.8</javacArg>
+                        <javacArg>${maven.compiler.source}</javacArg>
                     </javacArgs>
                 </configuration>
             </plugin>

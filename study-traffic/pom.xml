@@ -13,15 +13,11 @@
     <artifactId>study-traffic</artifactId>
     <packaging>jar</packaging>
 
-    <properties>
-        <study-parent.version>1.0</study-parent.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.tdl.study</groupId>
             <artifactId>study-core</artifactId>
-            <version>${study-parent.version}</version>
+            <version>${project.version}</version>
         </dependency>
 
     </dependencies>

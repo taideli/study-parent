@@ -13,10 +13,6 @@
     <artifactId>study-hbase</artifactId>
     <packaging>jar</packaging>
 
-    <properties>
-        <study-core.version>1.0</study-core.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.apache.hbase</groupId>
@@ -47,6 +43,7 @@
             <groupId>org.apache.hbase</groupId>
             <artifactId>hbase-client</artifactId>
             <version>${hbase.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -59,7 +56,7 @@
         <dependency>
             <groupId>com.tdl.study</groupId>
             <artifactId>study-core</artifactId>
-            <version>${study-core.version}</version>
+            <version>${project.version}</version>
         </dependency>
 
 

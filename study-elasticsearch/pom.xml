@@ -13,18 +13,7 @@
     <artifactId>study-elasticsearch</artifactId>
     <packaging>jar</packaging>
 
-    <properties>
-        <elasticsearch.version>5.2.0</elasticsearch.version>
-        <log4j.core.version>2.9.1</log4j.core.version>
-    </properties>
-
     <dependencies>
-
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>${log4j.core.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>org.elasticsearch.client</groupId>
