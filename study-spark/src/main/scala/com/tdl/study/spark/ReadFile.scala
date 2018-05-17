@@ -1,4 +1,4 @@
-package com.tdl.study.spark.pkg1.read
+package com.tdl.study.spark
 
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.{Column, SparkSession}
