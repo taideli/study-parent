@@ -1,4 +1,4 @@
-package pis
+package com.tdl.study.scala.pis
 
 object Class1_1 {
 

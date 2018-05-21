@@ -1,4 +1,4 @@
-package collection
+package com.tdl.study.scala.collection
 
 object TestTuple {
 

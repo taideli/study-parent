@@ -1,3 +1,5 @@
+package com.tdl.study.scala
+
 /**
   * scala 插值器
   * https://www.yiibai.com/scala/scala_strings.html

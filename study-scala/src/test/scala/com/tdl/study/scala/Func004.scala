@@ -1,3 +1,5 @@
+package com.tdl.study.scala
+
 /**
   * 泛型
   */

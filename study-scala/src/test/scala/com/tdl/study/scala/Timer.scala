@@ -1,3 +1,5 @@
+package com.tdl.study.scala
+
 object Timer {
 
   def oncePerSecond(callback: () => Unit): Unit = {
