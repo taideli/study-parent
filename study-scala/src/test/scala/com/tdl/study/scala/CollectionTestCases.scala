@@ -54,13 +54,25 @@ class CollectionTestCases {
 
   /** map test*/
   @Test
-  def m1()  {
+  def m1() { // todo  函数后面竟然可以不写等号
     var capital = Map("US" -> "Washington", "France" -> "Paris")
     capital += ("China" -> "BeiJing")
 
     println(capital("China"))
   }
 
+  /** array test */
+  @Test
+  def a1(): Unit = {
+    val a = new Array[String](3)
+    a(0) = "Hello"
+    a(1) = ","
+    a(2) = "world!\n"
+
+    for (i <- 0 to 2)
+      print(a(i))
+
+  }
 
   def factorial(x: BigInt): BigInt = if (0 == x) 1 else x * factorial(x - 1)
 
@@ -86,6 +98,7 @@ class CollectionTestCases {
     for (i <- 0 to 3) println(args(i))
   }
 
+  /** Unit is void */
   @Test
   def getclazz() = println(forLoop2.getClass.getCanonicalName)
 
