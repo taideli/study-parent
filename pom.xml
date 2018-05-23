@@ -20,7 +20,6 @@
         <module>study-mongo</module>
         <module>study-scala</module>
         <module>study-spark</module>
-        <!--<module>study-spring</module>-->
         <module>study-tools</module>
         <module>study-kudu</module>
         <module>study-impala</module>
