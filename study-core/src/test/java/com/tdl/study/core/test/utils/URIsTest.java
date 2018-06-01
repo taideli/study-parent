@@ -1,6 +1,8 @@
 package com.tdl.study.core.test.utils;
 
+import com.tdl.study.core.utils.CLike;
 import com.tdl.study.core.utils.URIs;
+import org.junit.Test;
 
 import java.io.UnsupportedEncodingException;
 
@@ -29,5 +31,14 @@ public class URIsTest {
         System.out.println(uri);
         System.out.println(uri.toString(true));
         System.out.println(uri.toString(false));
+    }
+    
+    @Test
+    public void testCLike() {
+        System.out.println(CLike.__FILE__());
+        System.out.println(CLike.__FUNC__());
+        System.out.println(CLike.__TIME__());
+        System.out.println(CLike.__LINE__());
+        System.out.println(CLike.__FILE_FUNC_LINE_TIME__());
     }
 }
